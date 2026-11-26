@@ -24,3 +24,11 @@ The bench uses the existing pinned ethers CDN dependency and X Layer RPC. Reads 
 - Mobile menu opening, Escape dismissal, and focus return checked.
 - Live RPC verified: inputs 1,1 returned 0; inputs 0,0 returned 1.
 - JavaScript syntax and local resource/link checks pass.
+
+## Motion and color modes
+
+The header now includes a light/dark control on all four main pages. Initial mode follows the OS preference; explicit selections persist across reloads and page navigation, synchronize across tabs, and remain usable when browser storage is unavailable. Light mode uses porcelain surfaces, graphite typography, and copper accents.
+
+The original SVG contains five animated signal traces and a breathing processor edge. Buttons have press feedback and a hover sheen; settlement changes animate into place. Same-origin page links use native cross-document view transitions where supported, with normal navigation as fallback. Reduced-motion settings disable these effects.
+
+Follow-up verification: checked all four pages in light mode at 320px; confirmed the theme survives navigation and reload, exercised the outcome selector, inspected desktop light/dark pages, and observed changing SVG stroke offsets. Fixed the narrow bench layout to wrap controls when necessary.

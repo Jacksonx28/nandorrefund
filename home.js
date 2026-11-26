@@ -6,7 +6,15 @@
   };
   document.querySelectorAll('[data-outcome]').forEach(button => {
     button.addEventListener('click', () => {
+      if (button.getAttribute('aria-pressed') === 'true') return;
       const item = outcomes[button.dataset.outcome];
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const receipt = document.querySelector('.settlement');
+      receipt.getAnimations().forEach(animation => animation.cancel());
+      if (!reduced) receipt.animate([
+        { opacity: .25, transform: 'translateY(10px)', filter: 'blur(3px)' },
+        { opacity: 1, transform: 'translateY(0)', filter: 'blur(0)' }
+      ], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
       document.querySelectorAll('[data-outcome]').forEach(option => {
         const active = option === button;
         option.classList.toggle('active', active);

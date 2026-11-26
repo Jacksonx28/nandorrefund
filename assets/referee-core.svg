@@ -1,4 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="720" height="680" viewBox="0 0 720 680" fill="none">
+<style>
+.signal-flow { stroke-dasharray: 10 90; animation: signal-travel 3.8s linear infinite; }
+.signal-flow.secondary { animation-delay: -1.9s; }
+.core-energy { animation: energy-breathe 4s ease-in-out infinite; }
+@keyframes signal-travel { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+@keyframes energy-breathe { 0%,100% { opacity:.25; } 50% { opacity:.75; } }
+@media (prefers-reduced-motion: reduce) { .signal-flow, .core-energy { animation:none; } .signal-flow { stroke-dasharray:none; opacity:.5; } }
+</style>
 <defs>
  <linearGradient id="board" x1="130" y1="190" x2="600" y2="610" gradientUnits="userSpaceOnUse"><stop stop-color="#25262b"/><stop offset=".5" stop-color="#121316"/><stop offset="1" stop-color="#08090b"/></linearGradient>
  <linearGradient id="edge" x1="130" y1="300" x2="600" y2="500" gradientUnits="userSpaceOnUse"><stop stop-color="#71717b"/><stop offset=".4" stop-color="#24252b"/><stop offset=".7" stop-color="#5c5d63"/><stop offset="1" stop-color="#15161b"/></linearGradient>
@@ -25,7 +33,7 @@
 <path d="M213 321l146-85 150 87v26l-149 86-147-86z" fill="#111215" stroke="#44454d" filter="url(#shadow)"/>
 <path d="M213 321l146-85 150 87-149 86z" fill="#282930" stroke="#a2a0a4"/>
 <path d="M213 342l147 85 149-85" stroke="url(#orange)" stroke-width="2"/>
-<path d="M213 342l147 85 149-85" stroke="#f7a86b" stroke-width="9" opacity=".5" filter="url(#glow)"/>
+<path d="M213 342l147 85 149-85" stroke="#f7a86b" stroke-width="9" opacity=".5" filter="url(#glow)" class="core-energy"/>
 <path d="M222.0 318.0v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M369.0 389.0v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M231.7 323.6v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M378.7 383.4v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M241.4 329.2v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M388.4 377.8v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M251.1 334.8v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M398.1 372.2v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M260.8 340.4v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M407.8 366.6v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M270.5 346.0v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M417.5 361.0v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M280.2 351.6v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M427.2 355.4v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M289.9 357.2v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M436.9 349.8v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M299.6 362.8v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M446.6 344.2v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M309.3 368.4v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M456.3 338.6v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M319.0 374.0v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M466.0 333.0v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M328.7 379.6v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M475.7 327.4v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M338.4 385.2v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M485.4 321.8v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M231 274l128-74 131 76v39l-130 75-129-75z" fill="url(#edge)" stroke="#72737c"/>
 <path d="M231 274l128-74 131 76-130 75z" fill="url(#lid)" stroke="url(#bevel)" stroke-width="2"/>
 <path d="M241 274l118-68 121 70-120 69z" stroke="#c5c5ce" stroke-opacity=".22"/>
@@ -45,4 +53,11 @@
 <g fill="#fff" opacity=".5"><circle cx="127" cy="366" r="2"/><circle cx="595" cy="367" r="2"/><circle cx="360" cy="505" r="2"/></g>
 <path d="M142 455v20l38 22M565 451v20l-38 22" stroke="#727078" stroke-opacity=".4"/>
 <text x="317" y="568" fill="#6f6b6a" font-family="monospace" font-size="9" letter-spacing="4">LOGIC IS FINAL</text>
+<g stroke="#ffe3bd" stroke-width="2.4" stroke-linecap="round" fill="none">
+ <path class="signal-flow" pathLength="100" d="M159 343l43-25 40 23"/>
+ <path class="signal-flow secondary" pathLength="100" d="M186 388l44 25 46-27"/>
+ <path class="signal-flow" pathLength="100" d="M446 386l45 26 54-31"/>
+ <path class="signal-flow secondary" pathLength="100" d="M478 340l44-26 36 21"/>
+ <path class="signal-flow" pathLength="100" d="M359 433v32l40 23"/>
+</g>
 </svg>
