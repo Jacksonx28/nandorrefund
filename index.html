@@ -1,62 +1,176 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NANDorRefund Spike - Deploy SpikeCaller</title>
-<style>body{font-family:system-ui,sans-serif;max-width:640px;margin:40px auto;padding:0 16px;background:#0e0f13;color:#e8e9ec}button{background:#ff4d00;color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:16px;cursor:pointer;margin:6px 6px 6px 0}button:disabled{opacity:.4}code{background:#1c1e24;padding:2px 6px;border-radius:6px;word-break:break-all}.card{background:#17181d;border:1px solid #26272e;border-radius:14px;padding:18px;margin:14px 0}a{color:#ff7a29}#log{white-space:pre-wrap;font-size:14px;line-height:1.5}</style>
-</head><body>
-<h1>NANDorRefund spike: contract calls the circuit</h1>
-<p>This page deploys <b>SpikeCaller</b> on <b>X Layer (chain 196)</b>. It is wired to HashPortAI (0x4f3b...3400), circuit <b>#50</b>, the NAND circuit taped out on 25 Nov 2026. After deploying, ask it: input <b>3</b> (both pins 1) must answer <b>0</b>, input <b>0</b> must answer <b>1</b>.</p>
-<div class="card"><button id="connect">1. Connect wallet</button> <span id="acct">not connected</span></div>
-<div class="card"><button id="deploy" disabled>2. Deploy SpikeCaller</button><div id="deployed"></div></div>
-<div class="card"><button id="ask3" disabled>3a. ask(3) - expect verdict 0</button><button id="ask0" disabled>3b. ask(0) - expect verdict 1</button><div id="verdict"></div></div>
-<div class="card"><div id="log">Ready.</div></div>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NANDorRefund — The circuit is the referee</title>
+<meta name="description" content="Milestone escrow for freelance and bounty work on X Layer, refereed by a taped-out TapeOut circuit: RELEASE, REFUND, or SPLIT 50/50. Not decided by the client. Not decided by us.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0d10;--panel:#12151a;--panel2:#171b21;--line:#23272f;--text:#eceef1;--muted:#9aa3ad;--amber:#ffb224;--amber2:#ffcf6b;--green:#3ddc84;--red:#ff5d5d;--blue:#57a8ff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',system-ui,sans-serif;line-height:1.55}
+a{color:var(--amber2)}
+.mono{font-family:'IBM Plex Mono',monospace}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0;border-bottom:1px solid var(--line)}
+.logo{font-weight:700;font-size:20px;letter-spacing:.2px}
+.logo span{color:var(--amber)}
+nav .links a{color:var(--muted);text-decoration:none;margin-left:22px;font-size:15px}
+nav .links a:hover{color:var(--text)}
+.btn{display:inline-block;background:var(--amber);color:#141414;font-weight:700;text-decoration:none;padding:12px 22px;border-radius:10px;border:0;cursor:pointer;font-size:16px;font-family:inherit}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.hero{padding:72px 0 56px}
+.hero h1{font-size:clamp(40px,6.5vw,68px);line-height:1.04;font-weight:700;max-width:760px}
+.hero h1 em{font-style:normal;color:var(--amber)}
+.hero p.sub{color:var(--muted);font-size:19px;max-width:640px;margin:22px 0 30px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:34px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:7px 14px;font-size:13.5px;color:var(--muted)}
+.chip b{color:var(--green);font-weight:500}
+section{padding:48px 0;border-top:1px solid var(--line)}
+h2{font-size:30px;margin-bottom:10px}
+.lede{color:var(--muted);max-width:680px;margin-bottom:28px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.stepnum{font-family:'IBM Plex Mono',monospace;color:var(--amber);font-size:14px}
+.card h3{margin:8px 0 8px;font-size:19px}
+.card p{color:var(--muted);font-size:15.5px}
+.pins{display:flex;gap:26px;align-items:flex-end;flex-wrap:wrap;margin:18px 0}
+.pin label{display:block;font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);margin-bottom:8px}
+.toggle{width:74px;height:40px;border-radius:999px;border:1px solid var(--line);background:var(--panel2);position:relative;cursor:pointer}
+.toggle::after{content:'';position:absolute;top:4px;left:4px;width:30px;height:30px;border-radius:50%;background:#3a4048;transition:all .18s}
+.toggle.on{border-color:var(--amber)}
+.toggle.on::after{left:38px;background:var(--amber)}
+.lamp{width:64px;height:64px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:24px;color:var(--muted);background:var(--panel2)}
+.lamp.on{border-color:var(--green);color:var(--green);box-shadow:0 0 26px rgba(61,220,132,.35)}
+.lamp.off{border-color:var(--red);color:var(--red);box-shadow:0 0 26px rgba(255,93,93,.25)}
+#demoStatus{color:var(--muted);font-size:14.5px;min-height:22px;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td,th{padding:11px 10px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--muted);font-weight:500}
+.pill{font-family:'IBM Plex Mono',monospace;font-size:13px;padding:3px 10px;border-radius:999px;border:1px solid var(--line)}
+.pill.rel{color:var(--green)}.pill.split{color:var(--amber2)}.pill.ref{color:var(--red)}
+.kv{font-family:'IBM Plex Mono',monospace;font-size:13.5px;word-break:break-all}
+.kv div{padding:9px 0;border-bottom:1px solid var(--line)}
+.kv b{color:var(--muted);font-weight:400;display:inline-block;min-width:190px}
+footer{padding:36px 0 46px;border-top:1px solid var(--line);color:var(--muted);font-size:14.5px}
+@media(max-width:640px){.kv b{min-width:0;display:block}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <div class="logo">NAND<span>or</span>Refund</div>
+  <div class="links">
+    <a href="#live">Live proof</a><a href="#how">How it works</a><a href="#verdicts">Verdicts</a>
+    <a href="https://github.com/Jacksonx28/nandorrefund">GitHub</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <h1>The circuit is <em>the referee.</em></h1>
+  <p class="sub">Milestone escrow for freelance and bounty work on X Layer. When a job ends, a taped-out TapeOut circuit decides RELEASE, REFUND, or SPLIT 50/50, from the delivery hash, the checklist, the deadline, and the client's signed acceptance. Not decided by the client. Not decided by us. And anyone can re-run the referee and check.</p>
+  <a class="btn" href="#live">Ask the referee, live</a>
+  <a class="btn ghost" href="#how" style="margin-left:10px">How it works</a>
+  <div class="chips">
+    <div class="chip"><b>● LIVE</b>&nbsp; Circuit #50 on X Layer mainnet</div>
+    <div class="chip">Spike passed 25 Nov 2026</div>
+    <div class="chip">Verdict cost ≈ 0.0000022 OKB</div>
+    <div class="chip">Full escrow ships for the 6 Dec submission</div>
+  </div>
+</header>
+
+<section id="live">
+  <h2>Ask the referee, live on mainnet</h2>
+  <p class="lede">These two switches are wired to the real thing. Flip them and the page calls circuit #50 on the HashPortAI processor over the X Layer network, right now, no wallet needed. This is our proof circuit, a 2-input NAND. The production referee uses the same mechanism with five inputs.</p>
+  <div class="card">
+    <div class="pins">
+      <div class="pin"><label>IN0</label><div class="toggle" id="t0" role="switch" aria-checked="false" tabindex="0"></div></div>
+      <div class="pin"><label>IN1</label><div class="toggle" id="t1" role="switch" aria-checked="false" tabindex="0"></div></div>
+      <div class="pin"><label>OUT</label><div class="lamp" id="lamp">–</div></div>
+      <button class="btn" id="askBtn">Ask circuit #50</button>
+    </div>
+    <div id="demoStatus">Circuit #50 · HashPortAI processor · X Layer (chain 196). A NAND answers 0 only when both inputs are 1.</div>
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h3 style="margin-top:0">Already proven in transactions</h3>
+    <p>On 25 Nov 2026 our SpikeCaller contract asked this circuit inside real transactions, and the verdicts settled on-chain: input 3 → <b style="color:var(--red)">0</b>, input 0 → <b style="color:var(--green)">1</b>. Verify them yourself:</p>
+    <div class="kv" style="margin-top:12px">
+      <div><b>Tape-out tx</b> <a href="https://www.oklink.com/xlayer/tx/0xccceec9d52b5225fdec212da2eb239dce9b2d7b80b213749465c3b454f14bc2d">0xcccee…c2d</a></div>
+      <div><b>SpikeCaller contract</b> <a href="https://www.oklink.com/xlayer/address/0xEa4532ec66823A6EFfF9335a907155E587294E9e">0xEa4532…94E9e</a></div>
+      <div><b>Verdict tx, input [3] → 0</b> <a href="https://www.oklink.com/xlayer/tx/0x6c5a564fee3122be171f9be721afe1d0883ef3677dffa6867e6edf9e34cbb260">0x6c5a5…260</a></div>
+      <div><b>Verdict tx, input [0] → 1</b> <a href="https://www.oklink.com/xlayer/tx/0xdca0bbc25197412a67d576e5de85ac99ca053fa52f34e2b669c4781ae815c056">0xdca0b…056</a></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <h2>How it works</h2>
+  <p class="lede">One complete journey, no wallet until money actually moves.</p>
+  <div class="grid">
+    <div class="card"><div class="stepnum">01</div><h3>Lock the milestone</h3><p>A client starts a job from an X post or an email link, no wallet needed. The milestone amount is locked in the escrow contract on X Layer, with the checklist and deadline written in.</p></div>
+    <div class="card"><div class="stepnum">02</div><h3>Deliver, hash, accept</h3><p>The freelancer delivers the work. Its hash is recorded on-chain. The client signs acceptance, or doesn't. Silence is data too.</p></div>
+    <div class="card"><div class="stepnum">03</div><h3>The circuit decides</h3><p>The escrow contract feeds the five facts to the referee circuit. The circuit answers, the contract pays. Nobody can lean on it, and the verdict can be re-run by anyone, forever, for fractions of a cent.</p></div>
+  </div>
+</section>
+
+<section id="verdicts">
+  <h2>Three verdicts, no discretion</h2>
+  <p class="lede">The referee reads five bits: delivered, delivery hash matches, checklist complete, deadline met, client accepted. Money arithmetic and the full hash check stay in the contract; the circuit decides.</p>
+  <div class="card">
+  <table>
+    <tr><th>Situation</th><th>Verdict</th></tr>
+    <tr><td>Delivered, hash matches, checklist done, client accepted</td><td><span class="pill rel">RELEASE</span></td></tr>
+    <tr><td>Delivered on time and matching, client never accepted</td><td><span class="pill split">SPLIT 50/50</span></td></tr>
+    <tr><td>Late, but the client accepted anyway</td><td><span class="pill rel">RELEASE</span></td></tr>
+    <tr><td>Nothing delivered by the deadline</td><td><span class="pill ref">REFUND</span></td></tr>
+    <tr><td>Delivered file does not match the recorded hash</td><td><span class="pill ref">REFUND</span></td></tr>
+    <tr><td>Checklist failed and client did not accept</td><td><span class="pill ref">REFUND</span></td></tr>
+  </table>
+  </div>
+  <div class="grid" style="margin-top:18px">
+    <div class="card"><h3 style="margin-top:0">Re-run the referee</h3><p>Every verdict ships with a button that replays the exact inputs through the circuit, live. If we ever lied about an outcome, the replay would expose it.</p></div>
+    <div class="card"><h3 style="margin-top:0">First escrow free, then 0.8%</h3><p>Platforms charge 10–20%, and dispute arbitration can add 5% more. A refereed verdict here costs about 0.0000022 OKB in gas. 0.8% covers the service, and the first job is on us.</p></div>
+    <div class="card"><h3 style="margin-top:0">No wallet until payout</h3><p>Start and accept jobs with X or email. A wallet is only needed at the moment money moves, which is the moment it should be needed.</p></div>
+  </div>
+</section>
+
+<footer>
+  NANDorRefund · Built on X Layer with TapeOut circuits · Circuit #50 on HashPortAI (0x4f3b…3400) ·
+  <a href="https://github.com/Jacksonx28/nandorrefund">github.com/Jacksonx28/nandorrefund</a> ·
+  Spike deploy tool: <a href="spike.html">jacksonx28.github.io/nandorrefund/spike.html</a>
+</footer>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
 <script>
-const ABI=[{"inputs":[{"internalType":"address","name":"_circuits","type":"address"},{"internalType":"uint256","name":"_circuitId","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"uint256","name":"circuitId","type":"uint256"},{"indexed":false,"internalType":"bytes","name":"inputs","type":"bytes"},{"indexed":false,"internalType":"bytes","name":"outputs","type":"bytes"},{"indexed":false,"internalType":"uint256","name":"verdictBit","type":"uint256"}],"name":"Verdict","type":"event"},{"inputs":[{"internalType":"uint8","name":"inputWord","type":"uint8"}],"name":"ask","outputs":[{"internalType":"uint256","name":"verdictBit","type":"uint256"}],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"calls","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"circuitId","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"circuits","outputs":[{"internalType":"contract ITapeOutCircuits","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"info","outputs":[{"internalType":"uint32","name":"","type":"uint32"},{"internalType":"uint32","name":"","type":"uint32"},{"internalType":"uint32","name":"","type":"uint32"},{"internalType":"uint32","name":"","type":"uint32"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"lastOutput","outputs":[{"internalType":"bytes","name":"","type":"bytes"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"lastVerdictBit","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}];
-const BYTECODE="608060405234801561000f575f5ffd5b50604051610f75380380610f758339818101604052810190610031919061010f565b815f5f6101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555080600181905550505061014d565b5f5ffd5b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f6100ab82610082565b9050919050565b6100bb816100a1565b81146100c5575f5ffd5b50565b5f815190506100d6816100b2565b92915050565b5f819050919050565b6100ee816100dc565b81146100f8575f5ffd5b50565b5f81519050610109816100e5565b92915050565b5f5f604083850312156101255761012461007e565b5b5f610132858286016100c8565b9250506020610143858286016100fb565b9150509250929050565b610e1b8061015a5f395ff3fe608060405234801561000f575f5ffd5b506004361061007b575f3560e01c8063370158ea11610059578063370158ea146100d95780635f48772d146100fa57806397228a7e14610118578063fb3c7ebe146101365761007b565b8063030c9d5c1461007f5780632c43b45a1461009d578063305f72b7146100bb575b5f5ffd5b610087610166565b6040516100949190610555565b60405180910390f35b6100a561016c565b6040516100b29190610555565b60405180910390f35b6100c3610172565b6040516100d09190610555565b60405180910390f35b6100e1610178565b6040516100f1949392919061058c565b60405180910390f35b610102610224565b60405161010f9190610649565b60405180910390f35b610120610248565b60405161012d91906106d2565b60405180910390f35b610150600480360381019061014b9190610739565b6102d4565b60405161015d9190610555565b60405180910390f35b60015481565b60035481565b60045481565b5f5f5f5f5f5f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663084d60f16001546040518263ffffffff1660e01b81526004016101d79190610555565b608060405180830381865afa1580156101f2573d5f5f3e3d5ffd5b505050506040513d601f19601f82011682018060405250810190610216919061078e565b935093509350935090919293565b5f5f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b600280546102559061081f565b80601f01602080910402602001604051908101604052809291908181526020018280546102819061081f565b80156102cc5780601f106102a3576101008083540402835291602001916102cc565b820191905f5260205f20905b8154815290600101906020018083116102af57829003601f168201915b505050505081565b5f5f600167ffffffffffffffff8111156102f1576102f061084f565b5b6040519080825280601f01601f1916602001820160405280156103235781602001600182028036833780820191505090505b5090508260f81b815f8151811061033d5761033c61087c565b5b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff191690815f1a9053505f5f5f9054906101000a900473ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1663e8281a1a6001545f67ffffffffffffffff8111156103c5576103c461084f565b5b6040519080825280601f01601f1916602001820160405280156103f75781602001600182028036833780820191505090505b50856040518463ffffffff1660e01b8152600401610417939291906108a9565b5f60405180830381865afa158015610431573d5f5f3e3d5ffd5b505050506040513d5f823e3d601f19601f8201168201806040525081019061045991906109dd565b9150505f81511161049f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260040161049690610aad565b60405180910390fd5b6001815f815181106104b4576104b361087c565b5b602001015160f81c60f81b60f81c1660ff16925080600290816104d79190610c73565b5082600381905550600160045f8282546104f19190610d6f565b925050819055506001547f2a1d501c551b6732c553bd73dfe007204c6b5ac8b6bcd3bf3a3c72c5537746d383838660405161052e93929190610da2565b60405180910390a25050919050565b5f819050919050565b61054f8161053d565b82525050565b5f6020820190506105685f830184610546565b92915050565b5f63ffffffff82169050919050565b6105868161056e565b82525050565b5f60808201905061059f5f83018761057d565b6105ac602083018661057d565b6105b9604083018561057d565b6105c6606083018461057d565b95945050505050565b5f73ffffffffffffffffffffffffffffffffffffffff82169050919050565b5f819050919050565b5f61061161060c610607846105cf565b6105ee565b6105cf565b9050919050565b5f610622826105f7565b9050919050565b5f61063382610618565b9050919050565b61064381610629565b82525050565b5f60208201905061065c5f83018461063a565b92915050565b5f81519050919050565b5f82825260208201905092915050565b8281835e5f83830152505050565b5f601f19601f8301169050919050565b5f6106a482610662565b6106ae818561066c565b93506106be81856020860161067c565b6106c78161068a565b840191505092915050565b5f6020820190508181035f8301526106ea818461069a565b905092915050565b5f604051905090565b5f5ffd5b5f5ffd5b5f60ff82169050919050565b61071881610703565b8114610722575f5ffd5b50565b5f813590506107338161070f565b92915050565b5f6020828403121561074e5761074d6106fb565b5b5f61075b84828501610725565b91505092915050565b61076d8161056e565b8114610777575f5ffd5b50565b5f8151905061078881610764565b92915050565b5f5f5f5f608085870312156107a6576107a56106fb565b5b5f6107b38782880161077a565b94505060206107c48782880161077a565b93505060406107d58782880161077a565b92505060606107e68782880161077a565b91505092959194509250565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52602260045260245ffd5b5f600282049050600182168061083657607f821691505b602082108103610849576108486107f2565b5b50919050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52604160045260245ffd5b7f4e487b71000000000000000000000000000000000000000000000000000000005f52603260045260245ffd5b5f6060820190506108bc5f830186610546565b81810360208301526108ce818561069a565b905081810360408301526108e2818461069a565b9050949350505050565b5f5ffd5b5f5ffd5b6108fd8261068a565b810181811067ffffffffffffffff8211171561091c5761091b61084f565b5b80604052505050565b5f61092e6106f2565b905061093a82826108f4565b919050565b5f67ffffffffffffffff8211156109595761095861084f565b5b6109628261068a565b9050602081019050919050565b5f61098161097c8461093f565b610925565b90508281526020810184848401111561099d5761099c6108f0565b5b6109a884828561067c565b509392505050565b5f82601f8301126109c4576109c36108ec565b5b81516109d484826020860161096f565b91505092915050565b5f5f604083850312156109f3576109f26106fb565b5b5f83015167ffffffffffffffff811115610a1057610a0f6106ff565b5b610a1c858286016109b0565b925050602083015167ffffffffffffffff811115610a3d57610a3c6106ff565b5b610a49858286016109b0565b9150509250929050565b5f82825260208201905092915050565b7f6e6f206f757470757400000000000000000000000000000000000000000000005f82015250565b5f610a97600983610a53565b9150610aa282610a63565b602082019050919050565b5f6020820190508181035f830152610ac481610a8b565b9050919050565b5f819050815f5260205f209050919050565b5f6020601f8301049050919050565b5f82821b905092915050565b5f60088302610b277fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82610aec565b610b318683610aec565b95508019841693508086168417925050509392505050565b5f610b63610b5e610b598461053d565b6105ee565b61053d565b9050919050565b5f819050919050565b610b7c83610b49565b610b90610b8882610b6a565b848454610af8565b825550505050565b5f5f905090565b610ba7610b98565b610bb2818484610b73565b505050565b5f5b82811015610bd857610bcd5f828401610b9f565b600181019050610bb9565b505050565b601f821115610c2b5782821115610c2a57610bf781610acb565b610c0083610add565b610c0985610add565b6020861015610c16575f90505b808301610c2582840382610bb7565b505050505b5b505050565b5f82821c905092915050565b5f610c4b5f1984600802610c30565b1980831691505092915050565b5f610c638383610c3c565b9150826002028217905092915050565b610c7c82610662565b67ffffffffffffffff811115610c9557610c9461084f565b5b610c9f825461081f565b610caa828285610bdd565b5f60209050601f831160018114610cdb575f8415610cc9578287015190505b610cd38582610c58565b865550610d3a565b601f198416610ce986610acb565b5f5b82811015610d1057848901518255600182019150602085019450602081019050610ceb565b86831015610d2d5784890151610d29601f891682610c3c565b8355505b6001600288020188555050505b505050505050565b7f4e487b71000000000000000000000000000000000000000000000000000000005f52601160045260245ffd5b5f610d798261053d565b9150610d848361053d565b9250828201905080821115610d9c57610d9b610d42565b5b92915050565b5f6060820190508181035f830152610dba818661069a565b90508181036020830152610dce818561069a565b9050610ddd6040830184610546565b94935050505056fea264697066735822122018e85945b089ee60e454e3641407ed11198d0f76994e3d9ef12d23bce85d351764736f6c63430008220033";
-const CIRCUITS="0x4f3b708af365b8f339dd35a8985ffe06c2553400";
-const CIRCUIT_ID=50;
-let signer, contract;
-const log=m=>{document.getElementById('log').textContent=m};
-document.getElementById('connect').onclick=async()=>{
-  if(!window.ethereum){log('No wallet extension found in this browser. Open this page in the Chrome that has Rabby.');return}
-  const provider=new ethers.BrowserProvider(window.ethereum);
-  await provider.send('eth_requestAccounts',[]);
-  const net=await provider.getNetwork();
-  if(net.chainId!==196n){
-    try{await window.ethereum.request({method:'wallet_switchEthereumChain',params:[{chainId:'0xc4'}]})}
-    catch(e){await window.ethereum.request({method:'wallet_addEthereumChain',params:[{chainId:'0xc4',chainName:'X Layer',rpcUrls:['https://rpc.xlayer.tech'],nativeCurrency:{name:'OKB',symbol:'OKB',decimals:18},blockExplorerUrls:['https://www.oklink.com/xlayer']}]})}
-  }
-  signer=await provider.getSigner();
-  const a=await signer.getAddress();
-  document.getElementById('acct').textContent=a+' on X Layer';
-  document.getElementById('deploy').disabled=false;
-  log('Connected: '+a);
-};
-document.getElementById('deploy').onclick=async()=>{
-  try{
-    log('Deploying... confirm in your wallet.');
-    const factory=new ethers.ContractFactory(ABI,BYTECODE,signer);
-    contract=await factory.deploy(CIRCUITS,CIRCUIT_ID);
-    const tx=contract.deploymentTransaction();
-    document.getElementById('deployed').innerHTML='Deploy tx: <a target="_blank" href="https://www.oklink.com/xlayer/tx/'+tx.hash+'">'+tx.hash+'</a>';
-    await contract.waitForDeployment();
-    const addr=await contract.getAddress();
-    document.getElementById('deployed').innerHTML+='<br><b>SpikeCaller address:</b> <code>'+addr+'</code>';
-    document.getElementById('ask3').disabled=false;document.getElementById('ask0').disabled=false;
-    log('Deployed at '+addr+'. Now run the ask tests.');
-  }catch(e){log('Deploy failed: '+(e.shortMessage||e.message))}
-};
-async function ask(v){
-  try{
-    log('ask('+v+') sent... confirm in your wallet.');
-    const tx=await contract.ask(v);
-    await tx.wait();
-    const verdict=await contract.lastVerdictBit();
-    const calls=await contract.calls();
-    document.getElementById('verdict').innerHTML='ask('+v+') verdict on-chain: <b>'+verdict+'</b> (total calls: '+calls+')<br>Tx: <a target="_blank" href="https://www.oklink.com/xlayer/tx/'+tx.hash+'">'+tx.hash+'</a>';
-    log('Done. ask('+v+') -> '+verdict);
-  }catch(e){log('ask failed: '+(e.shortMessage||e.message))}
+const PROCESSOR="0x4f3b708af365b8f339dd35a8985ffe06c2553400";
+const ABI=["function step(uint256 id, bytes state, bytes inputs) view returns (bytes, bytes)"];
+let in0=0, in1=0;
+function bindToggle(id, set){
+  const el=document.getElementById(id);
+  const flip=()=>{const on=!el.classList.contains('on');el.classList.toggle('on',on);el.setAttribute('aria-checked',on);set(on?1:0)};
+  el.addEventListener('click',flip);
+  el.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}});
 }
-document.getElementById('ask3').onclick=()=>ask(3);
-document.getElementById('ask0').onclick=()=>ask(0);
-</script></body></html>
+bindToggle('t0',v=>in0=v); bindToggle('t1',v=>in1=v);
+document.getElementById('askBtn').onclick=async()=>{
+  const status=document.getElementById('demoStatus'), lamp=document.getElementById('lamp');
+  const word=in0|(in1<<1);
+  status.textContent='Asking circuit #50 on X Layer…';
+  try{
+    const provider=new ethers.JsonRpcProvider('https://rpc.xlayer.tech');
+    const c=new ethers.Contract(PROCESSOR,ABI,provider);
+    const [,outputs]=await c.step(50,'0x',ethers.hexlify(new Uint8Array([word])));
+    const bit=parseInt(outputs.slice(2,4),16)&1;
+    lamp.textContent=bit; lamp.className='lamp '+(bit?'on':'off');
+    status.textContent='Inputs IN0='+in0+', IN1='+in1+' (packed byte '+word+') → OUT '+bit+'. Read live from X Layer mainnet just now. NAND: 0 only when both are 1.';
+  }catch(e){
+    lamp.textContent='–'; lamp.className='lamp';
+    status.textContent='The live read failed ('+(e.shortMessage||e.message)+'). The on-chain verdict transactions below are the permanent proof.';
+  }
+};
+</script>
+</body>
+</html>
