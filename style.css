@@ -23,12 +23,25 @@ nav{position:sticky;top:0;z-index:50;background:rgba(10,11,12,.9);backdrop-filte
 .nav-links a:hover{color:var(--text)}
 .nav-links a.active{color:var(--text);border-bottom-color:var(--amber)}
 @media(max-width:820px){.nav-links{gap:16px}}
+/* hamburger + slide-in sidebar (mobile) */
+.burger{display:none;width:42px;height:42px;border:1px solid var(--border2);border-radius:9px;background:var(--panel);cursor:pointer;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.burger span{display:block;width:18px;height:2px;background:var(--text)}
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .25s;z-index:90}
+.backdrop.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100dvh;width:min(320px,84vw);background:#0e1011;border-left:1px solid var(--border2);z-index:100;transform:translateX(105%);transition:transform .28s ease;display:flex;flex-direction:column;padding:22px 24px}
+.drawer.open{transform:translateX(0)}
+.drawer .d-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px}
+.drawer .d-close{width:38px;height:38px;border:1px solid var(--border2);border-radius:9px;background:var(--panel);color:var(--text);font-size:16px;cursor:pointer}
+.drawer a.d-link{display:flex;justify-content:space-between;align-items:center;padding:15px 2px;border-bottom:1px solid var(--border);color:var(--text);text-decoration:none;font-size:18px;font-weight:500}
+.drawer a.d-link .mono{font-size:10.5px;color:var(--faint);letter-spacing:.12em}
+.drawer a.d-link.active{color:var(--amber)}
+.drawer .d-cta{margin-top:28px}
+.drawer .d-foot{margin-top:auto;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:var(--faint);text-transform:uppercase}
 @media(max-width:760px){
-  .nav-in{flex-wrap:wrap;height:auto;padding-top:12px;row-gap:4px}
+  .nav-links{display:none}
+  .nav-in .btn.sm{display:none}
+  .burger{display:flex}
   .brand{font-size:16px}
-  .nav-in .btn.sm{height:34px;padding:0 14px;font-size:12.5px}
-  .nav-links{order:3;width:100%;justify-content:space-between;gap:0;padding:8px 0 12px;border-top:1px solid var(--border);margin-top:8px}
-  .nav-links a{font-size:11px;padding:2px 0}
   .spec td:first-child{width:128px}
   .spec td{padding:10px 8px}
   .panel{padding:22px 18px}

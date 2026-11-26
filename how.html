@@ -19,6 +19,7 @@
       <a href="index.html">Home</a><a href="bench.html">Live bench</a><a href="how.html" class="active">How it works</a><a href="proof.html">Proof</a>
     </div>
     <a class="btn sm" href="bench.html">Ask the referee</a>
+    <button class="burger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
   <div class="ticks"></div>
 </nav>
@@ -83,5 +84,21 @@
     <div style="display:flex;gap:20px"><a href="https://github.com/Jacksonx28/nandorrefund">GitHub</a><a href="spike.html">Spike tool</a><a href="v2.html">v2</a><a href="v1.html">v1</a></div>
   </div>
 </footer>
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" aria-label="Menu">
+  <div class="d-head">
+    <a class="brand" href="index.html" style="font-size:16px"><img src="logo.svg" alt="" width="26" height="26">NAND<span class="or">or</span>Refund</a>
+    <button class="d-close" id="drawerClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav>
+    <a class="d-link" href="index.html">Home<span class="mono">01</span></a>
+    <a class="d-link" href="bench.html">Live bench<span class="mono">02</span></a>
+    <a class="d-link active" href="how.html">How it works<span class="mono">03</span></a>
+    <a class="d-link" href="proof.html">Proof<span class="mono">04</span></a>
+  </nav>
+  <a class="btn d-cta" href="bench.html" style="justify-content:center">Ask the referee</a>
+  <div class="d-foot">Circuit #50 · X Layer mainnet</div>
+</aside>
+<script src="nav.js"></script>
 </body>
 </html>
