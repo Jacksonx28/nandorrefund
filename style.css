@@ -2077,3 +2077,18 @@ body, body > nav, .card, .panel, .settlement, .outcome-console, .outcome-choice,
 @media(max-width:500px) {
   .pins { flex-wrap: wrap; gap: 22px; }
 }
+
+/* Bench pin alignment fix (2026-11-26): labels share one line, the 44px
+   toggles are centred against the 64px lamp, and the row never wraps on
+   mobile, which is what scattered OUT on narrow screens. */
+.pins { align-items: start; }
+.pin { display: flex; flex-direction: column; }
+.pin .toggle { margin-top: 10px; }
+@media(max-width:500px) {
+  .pins { flex-wrap: nowrap; gap: 18px; margin-top: 26px; }
+  .toggle { width: 68px; height: 40px; }
+  .toggle:after { width: 30px; height: 30px; }
+  .toggle.on:after { transform: translateX(30px); }
+  .pin .toggle { margin-top: 9px; }
+  .lamp { width: 58px; height: 58px; font-size: 24px; }
+}
