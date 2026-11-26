@@ -8,26 +8,30 @@
 <link rel="icon" href="logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#08090b">
+<script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="inner-page">
+<a class="skip" href="#main">Skip to content</a>
 <nav>
   <div class="nav-in">
-    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28">NAND<span class="or">or</span>Refund</a>
+    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28"><span>NAND<span class="or">or</span>Refund</span></a>
     <div class="nav-links">
       <a href="index.html">Home</a><a href="bench.html">Live bench</a><a href="how.html">How it works</a><a href="proof.html" class="active">Proof</a>
     </div>
-    <a class="btn sm" href="bench.html">Ask the referee</a>
+    <a class="btn sm" href="bench.html">Open live bench</a>
+    <button class="theme-toggle" type="button" aria-label="Switch color mode"><svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a8.5 8.5 0 1 0 11.5 11.5Z"/></svg><span class="theme-label">Theme</span></button>
     <button class="burger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
-  <div class="ticks"></div>
+
 </nav>
 
-<div class="wrap pagehead">
-  <div class="eyebrow">[ Proof ]</div>
+<main id="main"><div class="wrap pagehead">
+  <div class="eyebrow">Proof</div>
   <h1 style="margin-top:18px">Don't take our word.<br>Take the chain's.</h1>
-  <p>Everything claimed on this site happened in public, on X Layer mainnet, and can be re-checked from these links in under a minute.</p>
+  <p>The proof circuit and its recorded verdicts are public on X Layer. Inspect the transactions below, alongside a clear view of what is live and what is still being built.</p>
 </div>
 
 <section style="padding-top:56px">
@@ -54,7 +58,7 @@
   </div>
 </section>
 
-<footer>
+</main><footer>
   <div class="wrap">
     <div>NANDorRefund · Circuit-refereed escrow on X Layer · Built with TapeOut</div>
     <div style="display:flex;gap:20px"><a href="https://github.com/Jacksonx28/nandorrefund">GitHub</a><a href="spike.html">Spike tool</a><a href="v2.html">v2</a><a href="v1.html">v1</a></div>
@@ -63,7 +67,7 @@
 <div class="backdrop" id="backdrop"></div>
 <aside class="drawer" id="drawer" aria-label="Menu">
   <div class="d-head">
-    <a class="brand" href="index.html" style="font-size:16px"><img src="logo.svg" alt="" width="26" height="26">NAND<span class="or">or</span>Refund</a>
+    <a class="brand" href="index.html" style="font-size:16px"><img src="logo.svg" alt="" width="26" height="26"><span>NAND<span class="or">or</span>Refund</span></a>
     <button class="d-close" id="drawerClose" aria-label="Close menu">✕</button>
   </div>
   <nav>
@@ -72,7 +76,7 @@
     <a class="d-link" href="how.html">How it works<span class="mono">03</span></a>
     <a class="d-link active" href="proof.html">Proof<span class="mono">04</span></a>
   </nav>
-  <a class="btn d-cta" href="bench.html" style="justify-content:center">Ask the referee</a>
+  <a class="btn d-cta" href="bench.html" style="justify-content:center">Open live bench</a>
   <div class="d-foot">Circuit #50 · X Layer mainnet</div>
 </aside>
 <script src="nav.js"></script>

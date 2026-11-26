@@ -8,26 +8,30 @@
 <link rel="icon" href="logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#08090b">
+<script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="inner-page">
+<a class="skip" href="#main">Skip to content</a>
 <nav>
   <div class="nav-in">
-    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28">NAND<span class="or">or</span>Refund</a>
+    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28"><span>NAND<span class="or">or</span>Refund</span></a>
     <div class="nav-links">
       <a href="index.html">Home</a><a href="bench.html" class="active">Live bench</a><a href="how.html">How it works</a><a href="proof.html">Proof</a>
     </div>
     <a class="btn sm" href="proof.html">See the proof</a>
+    <button class="theme-toggle" type="button" aria-label="Switch color mode"><svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a8.5 8.5 0 1 0 11.5 11.5Z"/></svg><span class="theme-label">Theme</span></button>
     <button class="burger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
-  <div class="ticks"></div>
+
 </nav>
 
-<div class="wrap pagehead">
-  <div class="eyebrow">[ Live bench ]</div>
+<main id="main"><div class="wrap pagehead">
+  <div class="eyebrow">Live bench</div>
   <h1 style="margin-top:18px">Ask the referee.<br>Right now, on mainnet.</h1>
-  <p>These switches are wired to the real circuit. Flip them and this page calls circuit #50 on the HashPortAI processor over the X Layer network, no wallet needed. It is our proof circuit, a 2-input NAND. The production referee uses the same mechanism with five inputs.</p>
+  <p>These switches are wired to the real circuit. Flip them and this page calls circuit #50 on the HashPortAI processor over the X Layer network, no wallet needed. It is our proof circuit, a 2-input NAND. The planned production referee will use the same mechanism with five inputs.</p>
 </div>
 
 <section style="border-bottom:0;padding-top:56px">
@@ -36,12 +40,12 @@
       <div class="panel">
         <div class="ph"><span class="t">Circuit #50 · NAND</span><span class="led">X LAYER · CHAIN 196</span></div>
         <div class="pins">
-          <div class="pin"><label>IN0</label><div class="toggle" id="t0" role="switch" aria-checked="false" tabindex="0"></div></div>
-          <div class="pin"><label>IN1</label><div class="toggle" id="t1" role="switch" aria-checked="false" tabindex="0"></div></div>
+          <div class="pin"><label>IN0</label><div aria-label="Input zero" class="toggle" id="t0" role="switch" aria-checked="false" tabindex="0"></div></div>
+          <div class="pin"><label>IN1</label><div aria-label="Input one" class="toggle" id="t1" role="switch" aria-checked="false" tabindex="0"></div></div>
           <div class="pin"><label>OUT</label><div class="lamp" id="lamp">–</div></div>
         </div>
         <div style="margin-top:24px"><button class="btn" id="askBtn">Ask circuit #50</button></div>
-        <div id="demoStatus">A NAND answers 0 only when both inputs are 1. Try 1 and 1, the case a thousand escrow arguments wish they could settle this cleanly.</div>
+        <div id="demoStatus" role="status" aria-live="polite">A NAND answers 0 only when both inputs are 1. Try 1 and 1, the case a thousand escrow arguments wish they could settle this cleanly.</div>
       </div>
       <div class="panel">
         <div class="ph"><span class="t">Machine record</span><span class="t" style="color:var(--faint)">ETH_CALL · READ ONLY</span></div>
@@ -71,7 +75,7 @@
 <section>
   <div class="wrap">
     <div class="sec-head">
-      <div class="eyebrow grey">[ Anatomy of a verdict ]</div>
+      <div class="eyebrow grey">Anatomy of a verdict</div>
       <h2>One real verdict, step by step.</h2>
       <p>No mockups. This is the recorded trail of our spike contract asking the circuit inside real transactions on 25 Nov 2026.</p>
     </div>
@@ -85,7 +89,7 @@
   </div>
 </section>
 
-<footer>
+</main><footer>
   <div class="wrap">
     <div>NANDorRefund · Circuit-refereed escrow on X Layer · Built with TapeOut</div>
     <div style="display:flex;gap:20px"><a href="https://github.com/Jacksonx28/nandorrefund">GitHub</a><a href="spike.html">Spike tool</a><a href="v2.html">v2</a><a href="v1.html">v1</a></div>
@@ -96,7 +100,7 @@
 <div class="backdrop" id="backdrop"></div>
 <aside class="drawer" id="drawer" aria-label="Menu">
   <div class="d-head">
-    <a class="brand" href="index.html" style="font-size:16px"><img src="logo.svg" alt="" width="26" height="26">NAND<span class="or">or</span>Refund</a>
+    <a class="brand" href="index.html" style="font-size:16px"><img src="logo.svg" alt="" width="26" height="26"><span>NAND<span class="or">or</span>Refund</span></a>
     <button class="d-close" id="drawerClose" aria-label="Close menu">✕</button>
   </div>
   <nav>
@@ -105,7 +109,7 @@
     <a class="d-link" href="how.html">How it works<span class="mono">03</span></a>
     <a class="d-link" href="proof.html">Proof<span class="mono">04</span></a>
   </nav>
-  <a class="btn d-cta" href="bench.html" style="justify-content:center">Ask the referee</a>
+  <a class="btn d-cta" href="bench.html" style="justify-content:center">Open live bench</a>
   <div class="d-foot">Circuit #50 · X Layer mainnet</div>
 </aside>
 <script src="nav.js"></script>

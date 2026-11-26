@@ -8,102 +8,79 @@
 <link rel="icon" href="logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#08090b">
+<script src="theme.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="home">
+<a class="skip" href="#main">Skip to content</a>
 <nav>
   <div class="nav-in">
-    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28">NAND<span class="or">or</span>Refund</a>
+    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28"><span>NAND<span class="or">or</span>Refund</span></a>
     <div class="nav-links">
       <a href="index.html" class="active">Home</a><a href="bench.html">Live bench</a><a href="how.html">How it works</a><a href="proof.html">Proof</a>
     </div>
-    <a class="btn sm" href="bench.html">Ask the referee</a>
+    <a class="btn sm" href="bench.html">Open live bench</a>
+    <button class="theme-toggle" type="button" aria-label="Switch color mode"><svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a8.5 8.5 0 1 0 11.5 11.5Z"/></svg><span class="theme-label">Theme</span></button>
     <button class="burger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
   </div>
-  <div class="ticks"></div>
+
 </nav>
 
+<main id="main">
 <header class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <div class="eyebrow">[ Circuit-refereed escrow · X Layer ]</div>
-      <h1 style="margin-top:22px">The circuit is<br>the <span class="serif-i">referee.</span></h1>
-      <p class="sub">Milestone escrow for freelance and bounty work. When a job ends, a taped-out TapeOut circuit decides RELEASE, REFUND, or SPLIT 50/50, from the delivery hash, the checklist, the deadline, and the client's signed acceptance. Not decided by the client. Not decided by us.</p>
-      <div class="ctas">
-        <a class="btn" href="bench.html">Ask the referee, live</a>
-        <a class="btn ghost" href="how.html">How it works</a>
-      </div>
-    </div>
-    <figure class="fig" aria-label="Schematic of the proof referee circuit">
-      <svg viewBox="0 0 420 300" fill="none" role="img">
-        <line x1="30" y1="96" x2="130" y2="96" stroke="#454a51" stroke-width="2"/>
-        <line x1="30" y1="164" x2="130" y2="164" stroke="#454a51" stroke-width="2"/>
-        <circle cx="130" cy="96" r="3.5" fill="#8a8f96"/><circle cx="130" cy="164" r="3.5" fill="#8a8f96"/>
-        <text x="30" y="78" fill="#676b71" font-family="IBM Plex Mono" font-size="12">IN0</text>
-        <text x="30" y="146" fill="#676b71" font-family="IBM Plex Mono" font-size="12">IN1</text>
-        <path d="M130 60h52a70 70 0 0 1 0 140h-52z" stroke="#c7cbd1" stroke-width="2.5"/>
-        <circle cx="258" cy="130" r="7" stroke="#c7cbd1" stroke-width="2.5"/>
-        <line x1="265" y1="130" x2="352" y2="130" stroke="#454a51" stroke-width="2"/>
-        <circle cx="368" cy="130" r="15" stroke="#3ddc84" stroke-width="2"/>
-        <text x="361" y="135" fill="#3ddc84" font-family="IBM Plex Mono" font-size="13">1</text>
-        <text x="330" y="112" fill="#676b71" font-family="IBM Plex Mono" font-size="12">OUT</text>
-        <path d="M368 145v55a14 14 0 0 1-14 14H84a14 14 0 0 0-14 14v14" stroke="#ffb224" stroke-width="2" stroke-dasharray="5 5"/>
-        <path d="M63 232l7 16 7-16z" fill="#ffb224"/>
-        <text x="150" y="238" fill="#ffb224" font-family="IBM Plex Mono" font-size="11" letter-spacing="2">REFUND PATH</text>
-        <text x="146" y="46" fill="#676b71" font-family="IBM Plex Mono" font-size="11" letter-spacing="2">NAND · 3 GATES</text>
-      </svg>
-      <figcaption class="fig-cap"><span>Fig. 01 · Proof referee</span><span>Circuit #50 · HashPortAI</span></figcaption>
-    </figure>
+ <div class="hero-noise" aria-hidden="true"></div>
+ <div class="wrap hero-grid">
+  <div class="hero-copy">
+   <div class="eyebrow"><span class="signal"></span> CIRCUIT-REFEREED ESCROW</div>
+   <h1>Good work.<br>Clear terms.<br><span class="silver">No grey areas.</span></h1>
+   <p class="sub">A fair finish for freelance work. Lock the terms, deliver the work, let the circuit decide.</p>
+   <div class="ctas"><a class="btn" href="bench.html"><span class="button-glyph" aria-hidden="true">⌘</span> Try the live circuit</a><a class="btn ghost" href="how.html">Explore the protocol</a></div>
+   <p class="micro">Read-only demo. No wallet. No signup.</p>
   </div>
+  <div class="core-scene">
+   <div class="scene-label"><span>THE REFEREE</span><span>CIRCUIT / 050</span></div>
+   <img class="core-art" src="assets/referee-core.svg" width="720" height="680" alt="A metallic NAND processor suspended above illuminated amber circuit traces">
+   <div class="core-caption"><span class="signal"></span><span>Deterministic by design</span><span class="mono">X LAYER</span></div>
+  </div>
+ </div>
+ <div class="wrap hero-bottom"><span>BUILT FOR WORK. SETTLED BY LOGIC.</span><div><span class="network-mark">✕</span> X Layer <span class="separator"></span><span class="tape-mark">▧</span> TapeOut</div><a href="#outcomes">Discover the outcomes <span aria-hidden="true">↓</span></a></div>
 </header>
-
-<section>
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow grey">[ The ledger ]</div>
-      <h2>Already on-chain. Already checkable.</h2>
-      <p>The referee is not a roadmap item. It was taped out on X Layer mainnet on 25 Nov 2026, and contracts have already taken verdicts from it in real transactions.</p>
-    </div>
-    <div class="feed">
-      <div class="feed-row"><span class="dot amber"></span><span class="what">Referee circuit taped out on HashPortAI, circuit #50</span><span class="blk">BLOCK 76874471</span><a href="https://www.oklink.com/xlayer/tx/0xccceec9d52b5225fdec212da2eb239dce9b2d7b80b213749465c3b454f14bc2d" target="_blank" rel="noopener">0xcccee…c2d ↗</a></div>
-      <div class="feed-row"><span class="dot"></span><span class="what">Contract asked the circuit, input [3], verdict 0</span><span class="blk">BLOCK 76876329</span><a href="https://www.oklink.com/xlayer/tx/0x6c5a564fee3122be171f9be721afe1d0883ef3677dffa6867e6edf9e34cbb260" target="_blank" rel="noopener">0x6c5a5…260 ↗</a></div>
-      <div class="feed-row"><span class="dot"></span><span class="what">Contract asked the circuit, input [0], verdict 1</span><span class="blk">BLOCK 76876356</span><a href="https://www.oklink.com/xlayer/tx/0xdca0bbc25197412a67d576e5de85ac99ca053fa52f34e2b669c4781ae815c056" target="_blank" rel="noopener">0xdca0b…056 ↗</a></div>
-      <div class="feed-row"><span class="dot amber"></span><span class="what">Go/no-go spike passed, all four kill criteria cleared</span><span class="blk">25 NOV 2026</span><a href="proof.html">PROOF →</a></div>
-    </div>
-    <div class="stats" style="margin-top:18px">
-      <div class="stat"><div class="num">#50</div><div class="lab">Referee circuit, live on mainnet</div></div>
-      <div class="stat"><div class="num">0.0000022</div><div class="lab">OKB, cost of one verdict</div></div>
-      <div class="stat"><div class="num">3</div><div class="lab">Verdicts: release · split · refund</div></div>
-      <div class="stat"><div class="num">0.8%</div><div class="lab">Fee, and the first escrow is free</div></div>
-    </div>
+<div class="proof-strip"><div class="wrap"><span class="proof-title">The proof is public.</span><span>Circuit #50 on mainnet</span><span>2 inputs · 1 verifiable output</span><a href="proof.html">Inspect the on-chain record</a></div></div>
+<section id="outcomes" class="outcomes">
+ <div class="wrap">
+  <div class="section-heading"><div><div class="eyebrow grey">A FINISH BOTH SIDES CAN SEE</div><h2>Three outcomes.<br>Already agreed.</h2></div><p>The planned referee turns delivery evidence into a clear settlement. The rules are set before the work starts.</p></div>
+  <div class="outcome-console">
+   <div class="outcome-options" aria-label="Settlement examples">
+    <button class="outcome-choice active" data-outcome="release" aria-pressed="true"><span class="choice-icon">✓</span><span><strong>Release</strong><small>The work checks out.</small></span><span class="choice-code">100 / 0</span></button>
+    <button class="outcome-choice" data-outcome="split" aria-pressed="false"><span class="choice-icon">◐</span><span><strong>Split 50/50</strong><small>Delivered. Not accepted.</small></span><span class="choice-code">50 / 50</span></button>
+    <button class="outcome-choice" data-outcome="refund" aria-pressed="false"><span class="choice-icon">↶</span><span><strong>Refund</strong><small>No valid delivery.</small></span><span class="choice-code">0 / 100</span></button>
+    <a class="text-link" href="how.html">Read the verdict rules</a>
+   </div>
+   <div class="settlement" aria-live="polite" aria-atomic="true">
+    <div class="console-top"><span>SETTLEMENT PREVIEW</span><span>ILLUSTRATIVE</span></div>
+    <div class="settlement-title"><span id="outcome-label">Work accepted.</span><span id="outcome-status" class="pill rel">RELEASE</span></div>
+    <p id="outcome-description">Delivery recorded, hash verified, checklist complete, and client acceptance signed.</p>
+    <div class="allocation"><div><span>Freelancer</span><strong id="freelancer-share">100<span>%</span></strong></div><div><span>Client</span><strong id="client-share">0<span>%</span></strong></div></div>
+    <div class="allocation-track" aria-hidden="true"><span id="allocation-fill"></span></div>
+    <div class="receipt-bottom"><span>Predetermined rules</span><span>Replayable outcome</span></div>
+   </div>
   </div>
+ </div>
 </section>
-
-<section>
-  <div class="wrap">
-    <div class="sec-head">
-      <div class="eyebrow grey">[ The verdicts ]</div>
-      <h2>Three answers. No fourth option called "argue".</h2>
-    </div>
-    <div class="grid3">
-      <div class="card"><span class="pill rel">RELEASE</span><div class="big">Paid in full</div><p>Delivered, the hash matches, the checklist is complete, and the client accepted, or accepted late delivery anyway. The escrow pays the freelancer everything.</p></div>
-      <div class="card"><span class="pill split">SPLIT 50/50</span><div class="big">Shared outcome</div><p>The work arrived, on time and matching its hash, but acceptance never came, or the checklist failed while the client accepted anyway. Neither side takes all of it.</p></div>
-      <div class="card"><span class="pill ref">REFUND</span><div class="big">Back to the client</div><p>Nothing delivered by the deadline, the delivered file does not match its recorded hash, or the checklist failed without acceptance. The escrow returns the money.</p></div>
-    </div>
-    <p style="margin-top:26px"><a href="how.html" style="color:var(--amber);text-decoration:none" class="mono">SEE THE FULL VERDICT TABLE →</a></p>
-  </div>
-</section>
-
-<div class="final">
-  <div class="wrap">
-    <div class="eyebrow grey">[ Try it ]</div>
-    <h2 style="margin-top:16px">Work first. <span class="serif-i" style="color:var(--amber)">Arguments never.</span></h2>
-    <p style="color:var(--muted);margin:18px 0 30px;max-width:520px">The bench page talks to the real circuit on mainnet. Flip two switches and watch it answer, no wallet, no signup.</p>
-    <a class="btn" href="bench.html">Open the live bench</a>
-  </div>
-</div>
-
+<section class="workflow"><div class="wrap">
+ <div class="section-heading"><div><div class="eyebrow grey">THE PROTOCOL</div><h2>Trust the work.<br>Verify the outcome.</h2></div><a href="how.html" class="btn ghost">How it works</a></div>
+ <div class="process-grid">
+  <article><div class="process-art lock-art" aria-hidden="true"><div class="lock-shackle"></div><div class="lock-body">▰</div></div><h3>Agree. Then lock.</h3><p>A milestone, a checklist, a deadline. Both sides know the rules before funds enter escrow.</p></article>
+  <article><div class="process-art hash-art" aria-hidden="true"><div>DELIVERY.HASH<br><b>0x7f<span>2a</span>…9c4e</b><small>INTEGRITY VERIFIED</small></div></div><h3>Deliver the evidence.</h3><p>The delivery hash, checklist, timing, and signed acceptance become the facts the referee reads.</p></article>
+  <article><div class="process-art path-art" aria-hidden="true"><span></span><b>◇</b><span></span><i>✓</i></div><h3>Let logic settle it.</h3><p>The circuit returns a verdict. The contract applies it. Anyone can replay the same inputs.</p></article>
+ </div>
+ <div class="development-note"><span class="pill">IN DEVELOPMENT</span><p>The five-input referee, production escrow, and TapeRelay delivery flow are being built. You can test the two-input proof circuit today.</p></div>
+</div></section>
+<section class="verification"><div class="wrap verification-grid"><div><div class="eyebrow grey">EVIDENCE OVER PROMISES</div><h2>Don’t trust the pitch.<br><span class="silver">Check the circuit.</span></h2><p>Public inputs. Public output. A permanent record on X Layer. Start with the proof circuit, then follow the transaction trail.</p><a class="btn ghost" href="proof.html">View the evidence</a></div><div class="evidence-card"><div class="console-top"><span>PROOF CIRCUIT</span><span>MAINNET</span></div><div class="evidence-number">#50<span>NAND / 3 GATES</span></div><div class="evidence-row"><span>Network</span><strong>X Layer · 196</strong></div><div class="evidence-row"><span>Recorded verdict cost</span><strong>≈ 0.0000022 OKB</strong></div><div class="evidence-row"><span>Proof</span><a href="proof.html">On-chain transactions</a></div></div></div></section>
+<section class="closing"><div class="wrap"><div class="eyebrow">YOUR INPUT. THE CIRCUIT’S ANSWER.</div><h2>The referee is ready.<br>Put it to the test.</h2><a class="btn" href="bench.html">Open the live bench</a><p class="micro">Two switches. One real mainnet call.</p></div></section>
+</main>
 <footer>
   <div class="wrap">
     <div>NANDorRefund · Circuit-refereed escrow on X Layer · Built with TapeOut</div>
@@ -113,7 +90,7 @@
 <div class="backdrop" id="backdrop"></div>
 <aside class="drawer" id="drawer" aria-label="Menu">
   <div class="d-head">
-    <a class="brand" href="index.html" style="font-size:16px"><img src="logo.svg" alt="" width="26" height="26">NAND<span class="or">or</span>Refund</a>
+    <a class="brand" href="index.html" style="font-size:16px"><img src="logo.svg" alt="" width="26" height="26"><span>NAND<span class="or">or</span>Refund</span></a>
     <button class="d-close" id="drawerClose" aria-label="Close menu">✕</button>
   </div>
   <nav>
@@ -125,6 +102,5 @@
   <a class="btn d-cta" href="bench.html" style="justify-content:center">Ask the referee</a>
   <div class="d-foot">Circuit #50 · X Layer mainnet</div>
 </aside>
-<script src="nav.js"></script>
-</body>
-</html>
+<script src="nav.js"></script><script src="home.js"></script>
+</body></html>
