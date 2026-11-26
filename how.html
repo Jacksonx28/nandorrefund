@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How it works — NANDorRefund</title>
+<meta name="description" content="How NANDorRefund works: lock the milestone, deliver and hash, the circuit decides. The full verdict table and the fee.">
+<link rel="icon" href="logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28">NAND<span class="or">or</span>Refund</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="bench.html">Live bench</a><a href="how.html" class="active">How it works</a><a href="proof.html">Proof</a>
+    </div>
+    <a class="btn sm" href="bench.html">Ask the referee</a>
+  </div>
+  <div class="ticks"></div>
+</nav>
+
+<div class="wrap pagehead">
+  <div class="eyebrow">[ How it works ]</div>
+  <h1 style="margin-top:18px">One journey.<br>No wallet until money moves.</h1>
+  <p>Three steps, and at no point does a human, including us, get to decide who keeps the money.</p>
+</div>
+
+<section style="padding-top:56px">
+  <div class="wrap">
+    <div class="grid3">
+      <div class="card"><div class="stepnum">STEP 01</div><h3>Lock the milestone</h3><p>A client starts a job from an X post or an email link, no wallet needed to begin. The milestone is locked in the escrow contract on X Layer, with the checklist and deadline written into the job.</p></div>
+      <div class="card"><div class="stepnum">STEP 02</div><h3>Deliver, hash, accept</h3><p>The freelancer delivers the work and its hash is recorded on-chain. Job briefs and deliveries travel over TapeRelay, TapeOut's own relay, so the hash the escrow sees is the hash of what was actually delivered. The client signs acceptance, or doesn't. Silence is data too.</p></div>
+      <div class="card"><div class="stepnum">STEP 03</div><h3>The circuit decides</h3><p>The escrow contract feeds five facts to the referee circuit. The circuit answers, the contract pays. Nobody can lean on it, phone it, or rush it, and the verdict can be re-run by anyone.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow grey">[ The verdict table ]</div>
+      <h2>Five bits in. One verdict out.</h2>
+      <p>The referee reads five bits, in order: delivered · hash matches · checklist complete · deadline met · client accepted. Money arithmetic and the full 256-bit hash check stay in the contract, where they belong. The circuit decides the outcome.</p>
+    </div>
+    <div class="panel" style="padding:6px 10px">
+      <table class="vtable">
+        <tr><th>Situation</th><th>Bits</th><th>Verdict</th></tr>
+        <tr><td>Delivered, hash matches, checklist done, client accepted</td><td class="bits">1 1 1 1 1</td><td><span class="pill rel">RELEASE</span></td></tr>
+        <tr><td>Delivered on time and matching, client never accepted</td><td class="bits">1 1 1 1 0</td><td><span class="pill split">SPLIT 50/50</span></td></tr>
+        <tr><td>Late, but the client accepted anyway</td><td class="bits">1 1 1 0 1</td><td><span class="pill rel">RELEASE</span></td></tr>
+        <tr><td>Checklist failed, client accepted the work anyway</td><td class="bits">1 1 0 1 1</td><td><span class="pill split">SPLIT 50/50</span></td></tr>
+        <tr><td>Nothing delivered by the deadline</td><td class="bits">0 – – – –</td><td><span class="pill ref">REFUND</span></td></tr>
+        <tr><td>Delivered file does not match the recorded hash</td><td class="bits">1 0 – – –</td><td><span class="pill ref">REFUND</span></td></tr>
+        <tr><td>Checklist failed and client did not accept</td><td class="bits">1 1 0 1 0</td><td><span class="pill ref">REFUND</span></td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow grey">[ Why this referee ]</div>
+      <h2>Built so nobody has to trust us.</h2>
+    </div>
+    <div class="grid2">
+      <div class="card"><h3 style="margin-top:0">Re-run the referee</h3><p>Every verdict carries a replay. The exact inputs go back through the circuit, live, and the answer must match the one that moved the money. If we ever lied about an outcome, the replay would expose it in seconds. That is the whole trust model: don't trust us, re-run it.</p></div>
+      <div class="card"><h3 style="margin-top:0">A split is a verdict, not a failure</h3><p>Most escrow is binary: pay or refund, and every grey job becomes a fight. Work that arrived but was never accepted is the commonest dispute in freelance work, so the circuit has a preset answer for it: 50/50, decided in advance, argued by nobody.</p></div>
+      <div class="card"><h3 style="margin-top:0">First escrow free, then 0.8%</h3><p>Platforms take 10–20%, and dispute arbitration can add 5% more. Ours is 0.8% after a free first job, because the referee costs 0.0000022 OKB, not a support team's afternoon.</p></div>
+      <div class="card"><h3 style="margin-top:0">No wallet until payout</h3><p>Start a job, deliver to one, accept one, all from X or email. A wallet appears only at the moment money actually moves, which is the moment it should appear.</p></div>
+    </div>
+    <p style="margin-top:30px"><a class="btn" href="bench.html">Watch it decide</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>NANDorRefund · Circuit-refereed escrow on X Layer · Built with TapeOut</div>
+    <div style="display:flex;gap:20px"><a href="https://github.com/Jacksonx28/nandorrefund">GitHub</a><a href="spike.html">Spike tool</a><a href="v2.html">v2</a><a href="v1.html">v1</a></div>
+  </div>
+</footer>
+</body>
+</html>

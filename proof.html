@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proof — NANDorRefund</title>
+<meta name="description" content="The public on-chain record for NANDorRefund: tape-out, contract, verdict transactions, and where the build stands.">
+<link rel="icon" href="logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28">NAND<span class="or">or</span>Refund</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="bench.html">Live bench</a><a href="how.html">How it works</a><a href="proof.html" class="active">Proof</a>
+    </div>
+    <a class="btn sm" href="bench.html">Ask the referee</a>
+  </div>
+  <div class="ticks"></div>
+</nav>
+
+<div class="wrap pagehead">
+  <div class="eyebrow">[ Proof ]</div>
+  <h1 style="margin-top:18px">Don't take our word.<br>Take the chain's.</h1>
+  <p>Everything claimed on this site happened in public, on X Layer mainnet, and can be re-checked from these links in under a minute.</p>
+</div>
+
+<section style="padding-top:56px">
+  <div class="wrap">
+    <div class="grid2">
+      <div class="panel">
+        <div class="ph"><span class="t">Public record</span></div>
+        <div class="kv">
+          <div><span class="k">Tape-out transaction · circuit #50 minted</span><a href="https://www.oklink.com/xlayer/tx/0xccceec9d52b5225fdec212da2eb239dce9b2d7b80b213749465c3b454f14bc2d" target="_blank" rel="noopener">0xccceec9d…f14bc2d</a></div>
+          <div><span class="k">SpikeCaller contract</span><a href="https://www.oklink.com/xlayer/address/0xEa4532ec66823A6EFfF9335a907155E587294E9e" target="_blank" rel="noopener">0xEa4532ec…587294E9e</a></div>
+          <div><span class="k">Verdict tx · input [3] → 0 · block 76876329</span><a href="https://www.oklink.com/xlayer/tx/0x6c5a564fee3122be171f9be721afe1d0883ef3677dffa6867e6edf9e34cbb260" target="_blank" rel="noopener">0x6c5a564f…f9e34cbb260</a></div>
+          <div><span class="k">Verdict tx · input [0] → 1 · block 76876356</span><a href="https://www.oklink.com/xlayer/tx/0xdca0bbc25197412a67d576e5de85ac99ca053fa52f34e2b669c4781ae815c056" target="_blank" rel="noopener">0xdca0bbc2…4781ae815c056</a></div>
+          <div><span class="k">Processor · HashPortAI #167</span><a href="https://www.oklink.com/xlayer/address/0x4f3b708af365b8f339dd35a8985ffe06c2553400" target="_blank" rel="noopener">0x4f3b708a…06c2553400</a></div>
+          <div><span class="k">Source code</span><a href="https://github.com/Jacksonx28/nandorrefund" target="_blank" rel="noopener">github.com/Jacksonx28/nandorrefund</a></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="ph"><span class="t">Where it stands · 26 Nov 2026</span></div>
+        <p style="color:var(--muted);font-size:15.5px">Proven end-to-end on mainnet: the circuit is taped out, a contract takes verdicts from it inside transactions, and the full NAND truth table checks out read-only. The go/no-go spike passed all four kill criteria on 25 Nov 2026.</p>
+        <p style="color:var(--muted);font-size:15.5px;margin-top:14px">Being built now, for the 6 Dec submission: the full five-input referee circuit, the production escrow contract around it, and delivery over TapeRelay. DeWEB hosting was spiked and set aside honestly: its publishing stack is proven on BNB Chain, not X Layer, so this frontend lives on Vercel.</p>
+        <p style="color:var(--muted);font-size:15.5px;margin-top:14px">Earlier versions of this site: <a href="v2.html" style="color:var(--amber)">v2</a> · <a href="v1.html" style="color:var(--amber)">v1</a> · the 25 Nov spike deploy tool: <a href="spike.html" style="color:var(--amber)">spike.html</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>NANDorRefund · Circuit-refereed escrow on X Layer · Built with TapeOut</div>
+    <div style="display:flex;gap:20px"><a href="https://github.com/Jacksonx28/nandorrefund">GitHub</a><a href="spike.html">Spike tool</a><a href="v2.html">v2</a><a href="v1.html">v1</a></div>
+  </div>
+</footer>
+</body>
+</html>

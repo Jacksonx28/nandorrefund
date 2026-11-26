@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NANDorRefund — The circuit is the referee</title>
+<meta name="description" content="Milestone escrow for freelance and bounty work on X Layer, refereed by a taped-out TapeOut circuit: RELEASE, REFUND, or SPLIT 50/50.">
+<link rel="icon" href="logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28">NAND<span class="or">or</span>Refund</a>
+    <div class="nav-links">
+      <a href="index.html" class="active">Home</a><a href="bench.html">Live bench</a><a href="how.html">How it works</a><a href="proof.html">Proof</a>
+    </div>
+    <a class="btn sm" href="bench.html">Ask the referee</a>
+  </div>
+  <div class="ticks"></div>
+</nav>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">[ Circuit-refereed escrow · X Layer ]</div>
+      <h1 style="margin-top:22px">The circuit is<br>the <span class="serif-i">referee.</span></h1>
+      <p class="sub">Milestone escrow for freelance and bounty work. When a job ends, a taped-out TapeOut circuit decides RELEASE, REFUND, or SPLIT 50/50, from the delivery hash, the checklist, the deadline, and the client's signed acceptance. Not decided by the client. Not decided by us.</p>
+      <div class="ctas">
+        <a class="btn" href="bench.html">Ask the referee, live</a>
+        <a class="btn ghost" href="how.html">How it works</a>
+      </div>
+    </div>
+    <figure class="fig" aria-label="Schematic of the proof referee circuit">
+      <svg viewBox="0 0 420 300" fill="none" role="img">
+        <line x1="30" y1="96" x2="130" y2="96" stroke="#454a51" stroke-width="2"/>
+        <line x1="30" y1="164" x2="130" y2="164" stroke="#454a51" stroke-width="2"/>
+        <circle cx="130" cy="96" r="3.5" fill="#8a8f96"/><circle cx="130" cy="164" r="3.5" fill="#8a8f96"/>
+        <text x="30" y="78" fill="#676b71" font-family="IBM Plex Mono" font-size="12">IN0</text>
+        <text x="30" y="146" fill="#676b71" font-family="IBM Plex Mono" font-size="12">IN1</text>
+        <path d="M130 60h52a70 70 0 0 1 0 140h-52z" stroke="#c7cbd1" stroke-width="2.5"/>
+        <circle cx="258" cy="130" r="7" stroke="#c7cbd1" stroke-width="2.5"/>
+        <line x1="265" y1="130" x2="352" y2="130" stroke="#454a51" stroke-width="2"/>
+        <circle cx="368" cy="130" r="15" stroke="#3ddc84" stroke-width="2"/>
+        <text x="361" y="135" fill="#3ddc84" font-family="IBM Plex Mono" font-size="13">1</text>
+        <text x="330" y="112" fill="#676b71" font-family="IBM Plex Mono" font-size="12">OUT</text>
+        <path d="M368 145v55a14 14 0 0 1-14 14H84a14 14 0 0 0-14 14v14" stroke="#ffb224" stroke-width="2" stroke-dasharray="5 5"/>
+        <path d="M63 232l7 16 7-16z" fill="#ffb224"/>
+        <text x="150" y="238" fill="#ffb224" font-family="IBM Plex Mono" font-size="11" letter-spacing="2">REFUND PATH</text>
+        <text x="146" y="46" fill="#676b71" font-family="IBM Plex Mono" font-size="11" letter-spacing="2">NAND · 3 GATES</text>
+      </svg>
+      <figcaption class="fig-cap"><span>Fig. 01 · Proof referee</span><span>Circuit #50 · HashPortAI</span></figcaption>
+    </figure>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow grey">[ The ledger ]</div>
+      <h2>Already on-chain. Already checkable.</h2>
+      <p>The referee is not a roadmap item. It was taped out on X Layer mainnet on 25 Nov 2026, and contracts have already taken verdicts from it in real transactions.</p>
+    </div>
+    <div class="feed">
+      <div class="feed-row"><span class="dot amber"></span><span class="what">Referee circuit taped out on HashPortAI, circuit #50</span><span class="blk">BLOCK 76874471</span><a href="https://www.oklink.com/xlayer/tx/0xccceec9d52b5225fdec212da2eb239dce9b2d7b80b213749465c3b454f14bc2d" target="_blank" rel="noopener">0xcccee…c2d ↗</a></div>
+      <div class="feed-row"><span class="dot"></span><span class="what">Contract asked the circuit, input [3], verdict 0</span><span class="blk">BLOCK 76876329</span><a href="https://www.oklink.com/xlayer/tx/0x6c5a564fee3122be171f9be721afe1d0883ef3677dffa6867e6edf9e34cbb260" target="_blank" rel="noopener">0x6c5a5…260 ↗</a></div>
+      <div class="feed-row"><span class="dot"></span><span class="what">Contract asked the circuit, input [0], verdict 1</span><span class="blk">BLOCK 76876356</span><a href="https://www.oklink.com/xlayer/tx/0xdca0bbc25197412a67d576e5de85ac99ca053fa52f34e2b669c4781ae815c056" target="_blank" rel="noopener">0xdca0b…056 ↗</a></div>
+      <div class="feed-row"><span class="dot amber"></span><span class="what">Go/no-go spike passed, all four kill criteria cleared</span><span class="blk">25 NOV 2026</span><a href="proof.html">PROOF →</a></div>
+    </div>
+    <div class="stats" style="margin-top:18px">
+      <div class="stat"><div class="num">#50</div><div class="lab">Referee circuit, live on mainnet</div></div>
+      <div class="stat"><div class="num">0.0000022</div><div class="lab">OKB, cost of one verdict</div></div>
+      <div class="stat"><div class="num">3</div><div class="lab">Verdicts: release · split · refund</div></div>
+      <div class="stat"><div class="num">0.8%</div><div class="lab">Fee, and the first escrow is free</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow grey">[ The verdicts ]</div>
+      <h2>Three answers. No fourth option called "argue".</h2>
+    </div>
+    <div class="grid3">
+      <div class="card"><span class="pill rel">RELEASE</span><div class="big">Paid in full</div><p>Delivered, the hash matches, the checklist is complete, and the client accepted, or accepted late delivery anyway. The escrow pays the freelancer everything.</p></div>
+      <div class="card"><span class="pill split">SPLIT 50/50</span><div class="big">Shared outcome</div><p>The work arrived, on time and matching its hash, but acceptance never came, or the checklist failed while the client accepted anyway. Neither side takes all of it.</p></div>
+      <div class="card"><span class="pill ref">REFUND</span><div class="big">Back to the client</div><p>Nothing delivered by the deadline, the delivered file does not match its recorded hash, or the checklist failed without acceptance. The escrow returns the money.</p></div>
+    </div>
+    <p style="margin-top:26px"><a href="how.html" style="color:var(--amber);text-decoration:none" class="mono">SEE THE FULL VERDICT TABLE →</a></p>
+  </div>
+</section>
+
+<div class="final">
+  <div class="wrap">
+    <div class="eyebrow grey">[ Try it ]</div>
+    <h2 style="margin-top:16px">Work first. <span class="serif-i" style="color:var(--amber)">Arguments never.</span></h2>
+    <p style="color:var(--muted);margin:18px 0 30px;max-width:520px">The bench page talks to the real circuit on mainnet. Flip two switches and watch it answer, no wallet, no signup.</p>
+    <a class="btn" href="bench.html">Open the live bench</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div>NANDorRefund · Circuit-refereed escrow on X Layer · Built with TapeOut</div>
+    <div style="display:flex;gap:20px"><a href="https://github.com/Jacksonx28/nandorrefund">GitHub</a><a href="spike.html">Spike tool</a><a href="v2.html">v2</a><a href="v1.html">v1</a></div>
+  </div>
+</footer>
+</body>
+</html>

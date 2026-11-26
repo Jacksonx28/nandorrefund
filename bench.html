@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live bench — NANDorRefund</title>
+<meta name="description" content="Ask the real referee circuit #50 on X Layer mainnet, live, and see the anatomy of a recorded on-chain verdict.">
+<link rel="icon" href="logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28">NAND<span class="or">or</span>Refund</a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="bench.html" class="active">Live bench</a><a href="how.html">How it works</a><a href="proof.html">Proof</a>
+    </div>
+    <a class="btn sm" href="proof.html">See the proof</a>
+  </div>
+  <div class="ticks"></div>
+</nav>
+
+<div class="wrap pagehead">
+  <div class="eyebrow">[ Live bench ]</div>
+  <h1 style="margin-top:18px">Ask the referee.<br>Right now, on mainnet.</h1>
+  <p>These switches are wired to the real circuit. Flip them and this page calls circuit #50 on the HashPortAI processor over the X Layer network, no wallet needed. It is our proof circuit, a 2-input NAND. The production referee uses the same mechanism with five inputs.</p>
+</div>
+
+<section style="border-bottom:0;padding-top:56px">
+  <div class="wrap">
+    <div class="bench">
+      <div class="panel">
+        <div class="ph"><span class="t">Circuit #50 · NAND</span><span class="led">X LAYER · CHAIN 196</span></div>
+        <div class="pins">
+          <div class="pin"><label>IN0</label><div class="toggle" id="t0" role="switch" aria-checked="false" tabindex="0"></div></div>
+          <div class="pin"><label>IN1</label><div class="toggle" id="t1" role="switch" aria-checked="false" tabindex="0"></div></div>
+          <div class="pin"><label>OUT</label><div class="lamp" id="lamp">–</div></div>
+        </div>
+        <div style="margin-top:24px"><button class="btn" id="askBtn">Ask circuit #50</button></div>
+        <div id="demoStatus">A NAND answers 0 only when both inputs are 1. Try 1 and 1, the case a thousand escrow arguments wish they could settle this cleanly.</div>
+      </div>
+      <div class="panel">
+        <div class="ph"><span class="t">Machine record</span><span class="t" style="color:var(--faint)">ETH_CALL · READ ONLY</span></div>
+        <div class="record" id="record"><span class="k">{</span>
+  <span class="k">"circuit"</span>: <span class="a">50</span>,
+  <span class="k">"processor"</span>: "HashPortAI · 0x4f3b…3400",
+  <span class="k">"inputs"</span>: [<span id="recIn">0, 0</span>],
+  <span class="k">"output"</span>: <span id="recOut">null</span>,
+  <span class="k">"source"</span>: "X Layer mainnet, read live"
+<span class="k">}</span></div>
+        <p style="color:var(--muted);font-size:14.5px;margin-top:16px">Every production verdict ships as a pair: a human receipt and this machine record, so the outcome can be re-run and checked by anyone, forever.</p>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:18px;padding:10px 28px">
+      <table class="spec">
+        <tr><td>Processor</td><td>HashPortAI #167 · 0x4f3b708a…06c2553400</td></tr>
+        <tr><td>Circuit</td><td>#50 · 2 inputs · 1 output · 0 state · 3 gates</td></tr>
+        <tr><td>Call used</td><td>step(uint256, bytes, bytes) · little-endian bit packing, pin i = bit i</td></tr>
+        <tr><td>Truth table, verified</td><td>0 → 1 · 1 → 1 · 2 → 1 · 3 → 0</td></tr>
+        <tr><td>Cost per verdict in a tx</td><td>≈ 0.0000022 OKB · 77,605 gas</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="eyebrow grey">[ Anatomy of a verdict ]</div>
+      <h2>One real verdict, step by step.</h2>
+      <p>No mockups. This is the recorded trail of our spike contract asking the circuit inside real transactions on 25 Nov 2026.</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-row"><div class="tl-rail"><div class="tl-dot">✓</div><div class="tl-line"></div></div><div class="tl-body"><div class="tt">Circuit taped out</div><div class="tm">BLOCK 76874471 · HASHPORTAI #167</div><p>The NAND referee was minted as circuit #50 on X Layer mainnet. Cost of the whole tape-out: 0.004969 OKB.</p></div></div>
+      <div class="tl-row"><div class="tl-rail"><div class="tl-dot">✓</div><div class="tl-line"></div></div><div class="tl-body"><div class="tt">Escrow-side contract deployed</div><div class="tm">SPIKECALLER · 0xEA4532…94E9E</div><p>A minimal contract whose only job is to ask the circuit and settle from its answer, the same shape the production escrow uses.</p></div></div>
+      <div class="tl-row"><div class="tl-rail"><div class="tl-dot">✓</div><div class="tl-line"></div></div><div class="tl-body"><div class="tt">Asked with inputs [3]</div><div class="tm">BLOCK 76876329 · TX 0x6C5A5…260</div><p>Both pins high. In a job, this is the fact pattern the contract feeds the referee, packed as bits.</p></div></div>
+      <div class="tl-row"><div class="tl-rail"><div class="tl-dot">✓</div><div class="tl-line"></div></div><div class="tl-body"><div class="tt">Verdict 0, emitted on-chain</div><div class="tm">VERDICT EVENT · SETTLED IN THE SAME TRANSACTION</div><p>The circuit answered, the contract recorded it, and the event is public forever. Then input [0] returned verdict 1, twice, at blocks 76876337 and 76876356.</p></div></div>
+      <div class="tl-row"><div class="tl-rail"><div class="tl-dot" style="color:var(--amber)">✓</div></div><div class="tl-body"><div class="tt">Total cost per verdict: 0.0000022 OKB</div><div class="tm">77,605 GAS · AGAINST A 0.0195 OKB KILL LINE</div><p>Refereeing a job costs less than a hundredth of a cent. That is why a circuit can referee a $20 bounty and a $20,000 contract with the same indifference.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>NANDorRefund · Circuit-refereed escrow on X Layer · Built with TapeOut</div>
+    <div style="display:flex;gap:20px"><a href="https://github.com/Jacksonx28/nandorrefund">GitHub</a><a href="spike.html">Spike tool</a><a href="v2.html">v2</a><a href="v1.html">v1</a></div>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+<script src="bench.js"></script>
+</body>
+</html>
