@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NANDorRefund — The circuit is the referee</title>
+<meta name="description" content="Milestone escrow for freelance and bounty work on X Layer, refereed by a taped-out TapeOut circuit: RELEASE, REFUND, or SPLIT 50/50. Not decided by the client. Not decided by us.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64' fill='none'%3E%3Cpath d='M14 10h14a14 22 0 0 1 0 44H14z' stroke='%23FAFAFA' stroke-width='4'/%3E%3Ccircle cx='45.5' cy='32' r='3.6' stroke='%23FAFAFA' stroke-width='3.4'/%3E%3Cpath d='M49 32h3a8 8 0 0 1 8 8v2' stroke='%23FFB224' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060708; --surface:rgba(255,255,255,.03); --surface2:rgba(255,255,255,.05);
+  --border:rgba(255,255,255,.08); --border2:rgba(255,255,255,.14);
+  --text:#FAFAFA; --muted:#A1A1AA; --faint:#6b7078;
+  --amber:#FFB224; --amber-soft:rgba(255,178,36,.12);
+  --green:#3DDC84; --red:#FF5D5D;
+  --r-lg:20px; --r-pill:999px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',system-ui,sans-serif;line-height:1.6;font-size:16px;overflow-x:hidden}
+::selection{background:var(--amber);color:#111}
+a{color:inherit}
+.mono{font-family:'IBM Plex Mono',monospace}
+.serif-i{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400}
+.bg-grid{position:fixed;inset:0;z-index:-2;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:56px 56px;-webkit-mask-image:radial-gradient(ellipse 90% 62% at 50% 0%,#000 30%,transparent 78%);mask-image:radial-gradient(ellipse 90% 62% at 50% 0%,#000 30%,transparent 78%)}
+.bg-glow{position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:720px;height:480px;z-index:-1;background:radial-gradient(closest-side,rgba(255,178,36,.20),transparent);filter:blur(60px);pointer-events:none}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(6,7,8,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom-color:var(--border)}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 24px;height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-weight:700;font-size:18px;letter-spacing:-.01em}
+.brand svg{width:30px;height:30px;color:var(--text)}
+.brand .or{color:var(--amber)}
+.nav-links{display:flex;gap:30px}
+.nav-links a{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{display:flex;align-items:center;gap:14px}
+@media(max-width:760px){.nav-links{display:none}}
+/* buttons */
+.btn{display:inline-flex;align-items:center;gap:9px;background:var(--amber);color:#161006;font-weight:600;font-size:15px;text-decoration:none;padding:0 26px;height:48px;border-radius:var(--r-pill);border:0;cursor:pointer;font-family:inherit;transition:transform .18s,box-shadow .18s;box-shadow:0 0 0 rgba(255,178,36,0)}
+.btn:hover{transform:scale(1.02);box-shadow:0 0 28px rgba(255,178,36,.30)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--border2);box-shadow:none}
+.btn.ghost:hover{border-color:rgba(255,255,255,.35)}
+.btn.sm{height:40px;padding:0 20px;font-size:14px}
+/* hero */
+.hero{position:relative;text-align:center;padding:168px 0 84px}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+.eyebrow.grey{color:var(--faint)}
+.hero h1{font-size:clamp(52px,8.2vw,94px);font-weight:500;letter-spacing:-.03em;line-height:1.0;max-width:920px;margin:26px auto 0}
+.hero h1 .serif-i{color:var(--amber);letter-spacing:-.01em}
+.hero p.sub{color:var(--muted);font-size:17.5px;line-height:1.65;max-width:620px;margin:28px auto 0}
+.hero .ctas{margin-top:38px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+/* ledger feed */
+.feed{max-width:760px;margin:56px auto 0;text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:8px 22px;backdrop-filter:blur(8px)}
+.feed-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--border);font-size:14.5px}
+.feed-row:last-child{border-bottom:0}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex:none;box-shadow:0 0 10px rgba(61,220,132,.7)}
+.dot.amber{background:var(--amber);box-shadow:0 0 10px rgba(255,178,36,.7)}
+.feed-row .what{flex:1;color:var(--text)}
+.feed-row .blk{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--faint)}
+.feed-row a{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--amber);text-decoration:none}
+.feed-row a:hover{text-decoration:underline}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:88px}
+.stat{padding:34px 26px;border-left:1px solid var(--border)}
+.stat:first-child{border-left:0}
+.stat .num{font-size:clamp(30px,4vw,52px);font-weight:500;letter-spacing:-.03em;line-height:1.05}
+.stat .lab{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-top:9px}
+@media(max-width:820px){.stats{grid-template-columns:1fr 1fr}.stat:nth-child(3){border-left:0}.stat{border-top:1px solid var(--border)}.stat:nth-child(-n+2){border-top:0}}
+/* sections */
+section{padding:112px 0;border-top:1px solid var(--border)}
+.sec-head{max-width:720px;margin-bottom:52px}
+.sec-head h2{font-size:clamp(32px,4.4vw,46px);font-weight:500;letter-spacing:-.03em;line-height:1.08;margin-top:16px}
+.sec-head p{color:var(--muted);margin-top:16px;font-size:16.5px}
+/* bench */
+.bench{display:grid;grid-template-columns:1.05fr .95fr;gap:20px;align-items:stretch}
+@media(max-width:900px){.bench{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:30px;position:relative;overflow:hidden}
+.panel .ph{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.panel .ph .t{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.led{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--green)}
+.led::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 9px rgba(61,220,132,.8)}
+.pins{display:flex;gap:30px;align-items:flex-end;flex-wrap:wrap}
+.pin label{display:block;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;color:var(--faint);margin-bottom:10px}
+.toggle{width:76px;height:42px;border-radius:var(--r-pill);border:1px solid var(--border2);background:rgba(255,255,255,.04);position:relative;cursor:pointer;transition:border-color .18s}
+.toggle::after{content:'';position:absolute;top:4px;left:4px;width:32px;height:32px;border-radius:50%;background:#3a4048;transition:all .18s}
+.toggle.on{border-color:var(--amber)}
+.toggle.on::after{left:38px;background:var(--amber);box-shadow:0 0 16px rgba(255,178,36,.55)}
+.lamp{width:66px;height:66px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:25px;color:var(--faint);background:rgba(255,255,255,.02);transition:all .25s}
+.lamp.on{border-color:var(--green);color:var(--green);box-shadow:0 0 30px rgba(61,220,132,.35)}
+.lamp.off{border-color:var(--red);color:var(--red);box-shadow:0 0 30px rgba(255,93,93,.28)}
+#demoStatus{color:var(--muted);font-size:14.5px;margin-top:22px;min-height:44px}
+.record{font-family:'IBM Plex Mono',monospace;font-size:13.5px;line-height:1.9;color:#c9cdd4;white-space:pre-wrap;word-break:break-all}
+.record .k{color:var(--faint)} .record .a{color:var(--amber)} .record .g{color:var(--green)} .record .r{color:var(--red)}
+/* timeline */
+.timeline{max-width:760px}
+.tl-row{display:flex;gap:20px}
+.tl-rail{display:flex;flex-direction:column;align-items:center}
+.tl-dot{width:30px;height:30px;border-radius:50%;border:1px solid var(--border2);background:var(--surface2);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:14px;flex:none}
+.tl-line{width:1px;flex:1;background:var(--border);min-height:26px}
+.tl-body{padding-bottom:30px}
+.tl-body .tt{font-weight:600;font-size:16.5px}
+.tl-body .tm{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--faint);margin-top:2px}
+.tl-body p{color:var(--muted);font-size:15px;margin-top:5px;max-width:560px}
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:900px){.bento{grid-template-columns:1fr}}
+.bento .wide{grid-column:span 2}
+@media(max-width:900px){.bento .wide{grid-column:span 1}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:30px;position:relative;overflow:hidden;--mx:50%;--my:50%}
+.card::before{content:'';position:absolute;inset:0;background:radial-gradient(320px circle at var(--mx) var(--my),rgba(255,178,36,.09),transparent 65%);opacity:0;transition:opacity .25s;pointer-events:none}
+.card:hover::before{opacity:1}
+.card .stepnum{font-family:'IBM Plex Mono',monospace;color:var(--amber);font-size:13px;letter-spacing:.1em}
+.card h3{font-size:20px;font-weight:600;letter-spacing:-.01em;margin:12px 0 9px}
+.card p{color:var(--muted);font-size:15.5px}
+/* verdicts */
+.vtable{width:100%;border-collapse:collapse;font-size:15.5px}
+.vtable th{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:500;text-align:left;padding:14px 16px;border-bottom:1px solid var(--border)}
+.vtable td{padding:16px;border-bottom:1px solid var(--border);color:#d7dae0}
+.vtable tr:last-child td{border-bottom:0}
+.bits{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--faint);white-space:nowrap}
+.pill{font-family:'IBM Plex Mono',monospace;font-size:12.5px;padding:4px 12px;border-radius:var(--r-pill);border:1px solid var(--border2);white-space:nowrap}
+.pill.rel{color:var(--green);border-color:rgba(61,220,132,.4)}
+.pill.split{color:var(--amber);border-color:rgba(255,178,36,.4)}
+.pill.ref{color:var(--red);border-color:rgba(255,93,93,.4)}
+@media(max-width:700px){.bits{display:none}}
+/* proof */
+.proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:900px){.proof-grid{grid-template-columns:1fr}}
+.kv div{padding:12px 0;border-bottom:1px solid var(--border);font-size:14.5px}
+.kv div:last-child{border-bottom:0}
+.kv .k{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:3px}
+.kv a{color:var(--amber);text-decoration:none;font-family:'IBM Plex Mono',monospace;font-size:13.5px;word-break:break-all}
+.kv a:hover{text-decoration:underline}
+/* final cta */
+.final{text-align:center;padding:120px 0}
+.final h2{font-size:clamp(38px,6vw,64px);font-weight:500;letter-spacing:-.03em;line-height:1.05}
+.final p{color:var(--muted);margin:20px auto 34px;max-width:520px}
+footer{border-top:1px solid var(--border);padding:40px 0 52px;color:var(--faint);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer a{color:var(--muted);text-decoration:none} footer a:hover{color:var(--text)}
+/* reveal */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .6s ease-out,transform .6s ease-out}
+.rv.in{opacity:1;transform:none}
+.rv-scale{opacity:0;transform:scale(.965);transition:opacity .7s ease-out,transform .7s ease-out}
+.rv-scale.in{opacity:1;transform:scale(1)}
+@media (prefers-reduced-motion: reduce){.rv,.rv-scale{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<nav id="nav">
+  <div class="nav-in">
+    <a class="brand" href="#top" aria-label="NANDorRefund home">
+      <svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M14 10h14a14 22 0 0 1 0 44H14z" stroke="currentColor" stroke-width="4"/><line x1="6" y1="22" x2="14" y2="22" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><line x1="6" y1="42" x2="14" y2="42" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><circle cx="45.5" cy="32" r="3.6" stroke="currentColor" stroke-width="3.4"/><path d="M49 32h3a8 8 0 0 1 8 8v2" stroke="#FFB224" stroke-width="4" stroke-linecap="round"/><path d="M55.5 37.5 60.2 46l4.7-8.5z" fill="#FFB224"/></svg>
+      NAND<span class="or">or</span>Refund
+    </a>
+    <div class="nav-links">
+      <a href="#live">Live bench</a><a href="#anatomy">Verdict</a><a href="#how">How it works</a><a href="#verdicts">Verdicts</a><a href="#proof">Proof</a>
+    </div>
+    <div class="nav-cta">
+      <a class="btn sm" href="#live">Ask the referee</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="bg-glow"></div>
+  <div class="wrap">
+    <div class="eyebrow">[ Circuit-refereed escrow · X Layer ]</div>
+    <h1>The circuit is<br>the <span class="serif-i">referee.</span></h1>
+    <p class="sub">Milestone escrow for freelance and bounty work. When a job ends, a taped-out TapeOut circuit decides RELEASE, REFUND, or SPLIT 50/50, from the delivery hash, the checklist, the deadline, and the client's signed acceptance. Not decided by the client. Not decided by us.</p>
+    <div class="ctas">
+      <a class="btn" href="#live">Ask the referee, live</a>
+      <a class="btn ghost" href="#how">How it works</a>
+    </div>
+
+    <div class="feed rv" aria-label="On-chain ledger entries">
+      <div class="feed-row"><span class="dot amber"></span><span class="what">Referee circuit taped out on HashPortAI, circuit #50</span><span class="blk">BLOCK 76874471</span><a href="https://www.oklink.com/xlayer/tx/0xccceec9d52b5225fdec212da2eb239dce9b2d7b80b213749465c3b454f14bc2d" target="_blank" rel="noopener">0xcccee…c2d ↗</a></div>
+      <div class="feed-row"><span class="dot"></span><span class="what">Contract asked the circuit, input [3], verdict 0</span><span class="blk">BLOCK 76876329</span><a href="https://www.oklink.com/xlayer/tx/0x6c5a564fee3122be171f9be721afe1d0883ef3677dffa6867e6edf9e34cbb260" target="_blank" rel="noopener">0x6c5a5…260 ↗</a></div>
+      <div class="feed-row"><span class="dot"></span><span class="what">Contract asked the circuit, input [0], verdict 1</span><span class="blk">BLOCK 76876356</span><a href="https://www.oklink.com/xlayer/tx/0xdca0bbc25197412a67d576e5de85ac99ca053fa52f34e2b669c4781ae815c056" target="_blank" rel="noopener">0xdca0b…056 ↗</a></div>
+      <div class="feed-row"><span class="dot amber"></span><span class="what">Go/no-go spike passed, all four kill criteria cleared</span><span class="blk">25 NOV 2026</span><a href="https://github.com/Jacksonx28/nandorrefund" target="_blank" rel="noopener">GITHUB ↗</a></div>
+    </div>
+
+    <div class="stats rv">
+      <div class="stat"><div class="num">#50</div><div class="lab">Referee circuit, live on mainnet</div></div>
+      <div class="stat"><div class="num">0.0000022</div><div class="lab">OKB, cost of one verdict</div></div>
+      <div class="stat"><div class="num">3</div><div class="lab">Verdicts: release · split · refund</div></div>
+      <div class="stat"><div class="num">0.8%</div><div class="lab">Fee, and the first escrow is free</div></div>
+    </div>
+  </div>
+</header>
+
+<section id="live">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow grey">[ 01 · Live bench ]</div>
+      <h2>Ask the referee.<br>Right now, on mainnet.</h2>
+      <p>These switches are wired to the real circuit. Flip them and this page calls circuit #50 on the HashPortAI processor over the X Layer network, no wallet needed. It is our proof circuit, a 2-input NAND. The production referee uses the same mechanism with five inputs.</p>
+    </div>
+    <div class="bench">
+      <div class="panel rv-scale">
+        <div class="ph"><span class="t">Circuit #50 · NAND</span><span class="led">X LAYER · CHAIN 196</span></div>
+        <div class="pins">
+          <div class="pin"><label>IN0</label><div class="toggle" id="t0" role="switch" aria-checked="false" tabindex="0"></div></div>
+          <div class="pin"><label>IN1</label><div class="toggle" id="t1" role="switch" aria-checked="false" tabindex="0"></div></div>
+          <div class="pin"><label>OUT</label><div class="lamp" id="lamp">–</div></div>
+        </div>
+        <div style="margin-top:26px"><button class="btn" id="askBtn">Ask circuit #50</button></div>
+        <div id="demoStatus">A NAND answers 0 only when both inputs are 1. Try 1 and 1, that is the case a thousand escrow arguments wish they could settle this cleanly.</div>
+      </div>
+      <div class="panel rv-scale">
+        <div class="ph"><span class="t">Machine record</span><span class="t" style="color:var(--faint)">ETH_CALL · READ ONLY</span></div>
+        <div class="record" id="record"><span class="k">{</span>
+  <span class="k">"circuit"</span>: <span class="a">50</span>,
+  <span class="k">"processor"</span>: "HashPortAI · 0x4f3b…3400",
+  <span class="k">"inputs"</span>: [<span id="recIn">0, 0</span>],
+  <span class="k">"output"</span>: <span id="recOut">null</span>,
+  <span class="k">"source"</span>: "X Layer mainnet, read live"
+<span class="k">}</span></div>
+        <p style="color:var(--muted);font-size:14.5px;margin-top:18px">Every production verdict ships as a pair: a human receipt and this machine record, so the outcome can be re-run and checked by anyone, forever.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="anatomy">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow grey">[ 02 · Anatomy of a verdict ]</div>
+      <h2>One real verdict,<br>step by step.</h2>
+      <p>No mockups. This is the recorded trail of our spike contract asking the circuit inside real transactions on 25 Nov 2026.</p>
+    </div>
+    <div class="timeline rv">
+      <div class="tl-row"><div class="tl-rail"><div class="tl-dot">✓</div><div class="tl-line"></div></div><div class="tl-body"><div class="tt">Circuit taped out</div><div class="tm">BLOCK 76874471 · HASHPORTAI #167</div><p>The NAND referee was minted as circuit #50 on X Layer mainnet. Cost of the whole tape-out: 0.004969 OKB.</p></div></div>
+      <div class="tl-row"><div class="tl-rail"><div class="tl-dot">✓</div><div class="tl-line"></div></div><div class="tl-body"><div class="tt">Escrow-side contract deployed</div><div class="tm">SPIKECALLER · 0xEA4532…94E9E</div><p>A minimal contract whose only job is to ask the circuit and settle from its answer, the same shape the production escrow uses.</p></div></div>
+      <div class="tl-row"><div class="tl-rail"><div class="tl-dot">✓</div><div class="tl-line"></div></div><div class="tl-body"><div class="tt">Asked with inputs [3]</div><div class="tm">BLOCK 76876329 · TX 0x6C5A5…260</div><p>Both pins high. In a job, this is the fact pattern the contract feeds the referee, packed as bits.</p></div></div>
+      <div class="tl-row"><div class="tl-rail"><div class="tl-dot">✓</div><div class="tl-line"></div></div><div class="tl-body"><div class="tt">Verdict 0, emitted on-chain</div><div class="tm">VERDICT EVENT · SETTLED IN THE SAME TRANSACTION</div><p>The circuit answered, the contract recorded it, and the event is public forever. Then input [0] returned verdict 1, twice, at blocks 76876337 and 76876356.</p></div></div>
+      <div class="tl-row"><div class="tl-rail"><div class="tl-dot" style="color:var(--amber)">✓</div></div><div class="tl-body"><div class="tt">Total cost per verdict: 0.0000022 OKB</div><div class="tm">77,605 GAS · AGAINST A 0.0195 OKB KILL LINE</div><p>Refereeing a job costs less than a hundredth of a cent. That is why a circuit can referee a $20 bounty and a $20,000 contract with the same indifference.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow grey">[ 03 · How it works ]</div>
+      <h2>One journey.<br>No wallet until money moves.</h2>
+    </div>
+    <div class="bento">
+      <div class="card rv"><div class="stepnum">01</div><h3>Lock the milestone</h3><p>A client starts a job from an X post or an email link, no wallet needed to begin. The milestone is locked in the escrow contract on X Layer, with the checklist and deadline written into the job.</p></div>
+      <div class="card rv"><div class="stepnum">02</div><h3>Deliver, hash, accept</h3><p>The freelancer delivers the work and its hash is recorded on-chain. The client signs acceptance, or doesn't. Silence is data too, and the circuit knows how to read it.</p></div>
+      <div class="card rv"><div class="stepnum">03</div><h3>The circuit decides</h3><p>The escrow contract feeds five facts to the referee circuit. The circuit answers, the contract pays. Nobody can lean on it, phone it, or rush it.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="verdicts">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow grey">[ 04 · The verdicts ]</div>
+      <h2>Three verdicts.<br>No discretion.</h2>
+      <p>The referee reads five bits, in order: delivered · hash matches · checklist complete · deadline met · client accepted. Money arithmetic and the full hash check stay in the contract. The circuit decides.</p>
+    </div>
+    <div class="panel rv" style="padding:6px 10px">
+      <table class="vtable">
+        <tr><th>Situation</th><th>Bits</th><th>Verdict</th></tr>
+        <tr><td>Delivered, hash matches, checklist done, client accepted</td><td class="bits">1 1 1 1 1</td><td><span class="pill rel">RELEASE</span></td></tr>
+        <tr><td>Delivered on time and matching, client never accepted</td><td class="bits">1 1 1 1 0</td><td><span class="pill split">SPLIT 50/50</span></td></tr>
+        <tr><td>Late, but the client accepted anyway</td><td class="bits">1 1 1 0 1</td><td><span class="pill rel">RELEASE</span></td></tr>
+        <tr><td>Checklist failed, client accepted the work anyway</td><td class="bits">1 1 0 1 1</td><td><span class="pill split">SPLIT 50/50</span></td></tr>
+        <tr><td>Nothing delivered by the deadline</td><td class="bits">0 – – – –</td><td><span class="pill ref">REFUND</span></td></tr>
+        <tr><td>Delivered file does not match the recorded hash</td><td class="bits">1 0 – – –</td><td><span class="pill ref">REFUND</span></td></tr>
+        <tr><td>Checklist failed and client did not accept</td><td class="bits">1 1 0 1 0</td><td><span class="pill ref">REFUND</span></td></tr>
+      </table>
+    </div>
+    <div class="bento" style="margin-top:20px">
+      <div class="card wide rv"><h3 style="margin-top:0">Re-run the referee</h3><p>Every verdict carries a replay. The exact inputs go back through the circuit, live, and the answer must match the one that moved the money. If we ever lied about an outcome, the replay would expose it in seconds. That is the whole trust model: don't trust us, re-run it.</p></div>
+      <div class="card rv"><h3 style="margin-top:0">First escrow free</h3><p>Platforms take 10–20%, and dispute arbitration can add 5% more. Ours is 0.8% after a free first job, because the referee costs 0.0000022 OKB, not a support team's afternoon.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="proof">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div class="eyebrow grey">[ 05 · Proof ]</div>
+      <h2>Don't take our word.<br>Take the chain's.</h2>
+    </div>
+    <div class="proof-grid">
+      <div class="panel rv">
+        <div class="ph"><span class="t">Public record</span></div>
+        <div class="kv">
+          <div><span class="k">Tape-out transaction</span><a href="https://www.oklink.com/xlayer/tx/0xccceec9d52b5225fdec212da2eb239dce9b2d7b80b213749465c3b454f14bc2d" target="_blank" rel="noopener">0xccceec9d…f14bc2d</a></div>
+          <div><span class="k">SpikeCaller contract</span><a href="https://www.oklink.com/xlayer/address/0xEa4532ec66823A6EFfF9335a907155E587294E9e" target="_blank" rel="noopener">0xEa4532ec…587294E9e</a></div>
+          <div><span class="k">Verdict tx · input [3] → 0</span><a href="https://www.oklink.com/xlayer/tx/0x6c5a564fee3122be171f9be721afe1d0883ef3677dffa6867e6edf9e34cbb260" target="_blank" rel="noopener">0x6c5a564f…f9e34cbb260</a></div>
+          <div><span class="k">Verdict tx · input [0] → 1</span><a href="https://www.oklink.com/xlayer/tx/0xdca0bbc25197412a67d576e5de85ac99ca053fa52f34e2b669c4781ae815c056" target="_blank" rel="noopener">0xdca0bbc2…4781ae815c056</a></div>
+          <div><span class="k">Source code</span><a href="https://github.com/Jacksonx28/nandorrefund" target="_blank" rel="noopener">github.com/Jacksonx28/nandorrefund</a></div>
+        </div>
+      </div>
+      <div class="panel rv">
+        <div class="ph"><span class="t">Where it stands</span></div>
+        <p style="color:var(--muted);font-size:15.5px">The mechanism is proven end-to-end on mainnet: circuit, contract, verdicts, costs. What is being built now, for the 6 Dec submission, is the full five-input referee circuit and the production escrow around it, with job briefs and delivery hashes carried by TapeRelay.</p>
+        <p style="color:var(--muted);font-size:15.5px;margin-top:14px">This page is hosted on Vercel while the product is built. The spike deploy tool from 25 Nov is kept at <a href="spike.html" style="color:var(--amber)">spike.html</a>, and the first version of this page at <a href="v1.html" style="color:var(--amber)">v1.html</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="final">
+  <div class="wrap rv">
+    <h2>Work first.<br><span class="serif-i" style="color:var(--amber)">Arguments never.</span></h2>
+    <p>The next job you post could be settled by a circuit instead of a thread of screenshots and accusations.</p>
+    <a class="btn" href="#live">See it decide, live</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div>NANDorRefund · Circuit-refereed escrow on X Layer · Built with TapeOut</div>
+    <div style="display:flex;gap:22px"><a href="https://github.com/Jacksonx28/nandorrefund">GitHub</a><a href="spike.html">Spike tool</a><a href="v1.html">v1</a></div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+<script>
+// nav scroll state
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>{nav.classList.toggle('scrolled',scrollY>24)},{passive:true});
+// reveal on scroll
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rv,.rv-scale').forEach(el=>io.observe(el));
+// spotlight cards
+document.querySelectorAll('.card').forEach(c=>{c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%')})});
+// live bench
+const PROCESSOR="0x4f3b708af365b8f339dd35a8985ffe06c2553400";
+const ABI=["function step(uint256 id, bytes state, bytes inputs) view returns (bytes, bytes)"];
+let in0=0,in1=0;
+function bindToggle(id,set){const el=document.getElementById(id);const flip=()=>{const on=!el.classList.contains('on');el.classList.toggle('on',on);el.setAttribute('aria-checked',on);set(on?1:0);document.getElementById('recIn').textContent=in0+', '+in1};el.addEventListener('click',flip);el.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();flip()}})}
+bindToggle('t0',v=>in0=v);bindToggle('t1',v=>in1=v);
+document.getElementById('askBtn').onclick=async()=>{
+  const status=document.getElementById('demoStatus'),lamp=document.getElementById('lamp'),recOut=document.getElementById('recOut');
+  const word=in0|(in1<<1);
+  status.textContent='Asking circuit #50 on X Layer…';recOut.textContent='"…"';
+  try{
+    const provider=new ethers.JsonRpcProvider('https://rpc.xlayer.tech');
+    const c=new ethers.Contract(PROCESSOR,ABI,provider);
+    const [,outputs]=await c.step(50,'0x',ethers.hexlify(new Uint8Array([word])));
+    const bit=parseInt(outputs.slice(2,4),16)&1;
+    lamp.textContent=bit;lamp.className='lamp '+(bit?'on':'off');
+    recOut.innerHTML=bit;recOut.className=bit?'g':'r';
+    status.textContent='Inputs IN0='+in0+', IN1='+in1+' (packed byte '+word+') → OUT '+bit+'. Read live from X Layer mainnet just now. NAND: 0 only when both inputs are 1.';
+  }catch(e){
+    lamp.textContent='–';lamp.className='lamp';recOut.textContent='null';
+    status.textContent='The live read failed ('+(e.shortMessage||e.message)+'). The on-chain verdict transactions in the proof section are the permanent record.';
+  }
+};
+</script>
+</body>
+</html>
