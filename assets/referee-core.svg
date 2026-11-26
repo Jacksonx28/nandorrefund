@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="680" viewBox="0 0 720 680" fill="none">
+<defs>
+ <linearGradient id="board" x1="130" y1="190" x2="600" y2="610" gradientUnits="userSpaceOnUse"><stop stop-color="#25262b"/><stop offset=".5" stop-color="#121316"/><stop offset="1" stop-color="#08090b"/></linearGradient>
+ <linearGradient id="edge" x1="130" y1="300" x2="600" y2="500" gradientUnits="userSpaceOnUse"><stop stop-color="#71717b"/><stop offset=".4" stop-color="#24252b"/><stop offset=".7" stop-color="#5c5d63"/><stop offset="1" stop-color="#15161b"/></linearGradient>
+ <linearGradient id="lid" x1="240" y1="210" x2="480" y2="390" gradientUnits="userSpaceOnUse"><stop stop-color="#a5a5ae"/><stop offset=".15" stop-color="#62636c"/><stop offset=".46" stop-color="#2f3037"/><stop offset=".7" stop-color="#474851"/><stop offset="1" stop-color="#212228"/></linearGradient>
+ <linearGradient id="bevel" x1="260" y1="210" x2="460" y2="415" gradientUnits="userSpaceOnUse"><stop stop-color="#dddde3"/><stop offset=".5" stop-color="#52545e"/><stop offset="1" stop-color="#91939d"/></linearGradient>
+ <linearGradient id="orange"><stop stop-color="#d4783d"/><stop offset=".5" stop-color="#ffe0bb"/><stop offset="1" stop-color="#ed9152"/></linearGradient>
+ <radialGradient id="halo"><stop stop-color="#e89b60" stop-opacity=".2"/><stop offset="1" stop-color="#e89b60" stop-opacity="0"/></radialGradient>
+ <filter id="glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="4"/></filter>
+ <filter id="shadow" x="-50%" y="-50%" width="200%" height="220%"><feDropShadow dx="0" dy="30" stdDeviation="15" flood-color="#000" flood-opacity=".8"/></filter>
+ <pattern id="mesh" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".55" fill="#ddd" opacity=".13"/></pattern>
+</defs>
+<ellipse cx="370" cy="410" rx="310" ry="220" fill="url(#halo)"/>
+<g stroke="#a8a2a0" stroke-opacity=".09" stroke-width=".8">
+<path d="M-124 180l400 230M-124 590l400-230"/><path d="M-68 180l400 230M-68 590l400-230"/><path d="M-12 180l400 230M-12 590l400-230"/><path d="M44 180l400 230M44 590l400-230"/><path d="M100 180l400 230M100 590l400-230"/><path d="M156 180l400 230M156 590l400-230"/><path d="M212 180l400 230M212 590l400-230"/><path d="M268 180l400 230M268 590l400-230"/><path d="M324 180l400 230M324 590l400-230"/><path d="M380 180l400 230M380 590l400-230"/><path d="M436 180l400 230M436 590l400-230"/><path d="M492 180l400 230M492 590l400-230"/></g>
+<path d="M76 371l283-164 286 164-286 165z" stroke="#c18d67" stroke-opacity=".15" stroke-dasharray="3 9"/>
+<path d="M126 365l232-135 237 137v19L360 523 126 387z" fill="#0b0c0f" stroke="#33343b"/>
+<path d="M126 365l232-135 237 137-235 137z" fill="url(#board)" stroke="#5d5d64" stroke-width="1.2"/>
+<path d="M126 365l234 139 235-137M360 504v19" stroke="#92929a" stroke-opacity=".3"/>
+<path d="M144 365l214-124 219 126-217 125z" fill="url(#mesh)"/>
+<g stroke="#a69c94" stroke-opacity=".25" stroke-width="1.2"><path d="M235 329.0l-54-31-36 21m90 68.0l-55 32-30-18"/><path d="M425 331.0l54-31 36 21m-90 68.0l55 32 30-18"/><path d="M243 324.36l-54-31-36 21m98 72.64l-55 32-30-18"/><path d="M433 335.64l54-31 36 21m-82 63.36l55 32 30-18"/><path d="M251 319.72l-54-31-36 21m106 77.28l-55 32-30-18"/><path d="M441 340.28l54-31 36 21m-74 58.72l55 32 30-18"/><path d="M259 315.08l-54-31-36 21m114 81.92l-55 32-30-18"/><path d="M449 344.92l54-31 36 21m-66 54.08l55 32 30-18"/><path d="M267 310.44l-54-31-36 21m122 86.56l-55 32-30-18"/><path d="M457 349.56l54-31 36 21m-58 49.44l55 32 30-18"/><path d="M275 305.8l-54-31-36 21m130 91.2l-55 32-30-18"/><path d="M465 354.2l54-31 36 21m-50 44.8l55 32 30-18"/><path d="M283 301.16l-54-31-36 21m138 95.84l-55 32-30-18"/><path d="M473 358.84l54-31 36 21m-42 40.160000000000004l55 32 30-18"/><path d="M291 296.52l-54-31-36 21m146 100.47999999999999l-55 32-30-18"/><path d="M481 363.48l54-31 36 21m-34 35.52l55 32 30-18"/><path d="M299 291.88l-54-31-36 21m154 105.12l-55 32-30-18"/><path d="M489 368.12l54-31 36 21m-26 30.880000000000003l55 32 30-18"/></g><g stroke="url(#orange)" stroke-width="1.6">
+<path d="M242 341l-40-23-43 25M276 386l-46 27-44-25M446 386l45 26 54-31M478 340l44-26 36 21M359 433v32l40 23"/>
+</g><g fill="#ffd0a0"><circle cx="159" cy="343" r="3"/><circle cx="186" cy="388" r="3"/><circle cx="545" cy="381" r="3"/><circle cx="558" cy="335" r="3"/><circle cx="399" cy="488" r="3"/></g>
+<g stroke="#f7a86b" stroke-width="7" filter="url(#glow)" opacity=".4"><path d="M242 341l-40-23-43 25M446 386l45 26 54-31M359 433v32l40 23"/></g>
+<path d="M213 321l146-85 150 87v26l-149 86-147-86z" fill="#111215" stroke="#44454d" filter="url(#shadow)"/>
+<path d="M213 321l146-85 150 87-149 86z" fill="#282930" stroke="#a2a0a4"/>
+<path d="M213 342l147 85 149-85" stroke="url(#orange)" stroke-width="2"/>
+<path d="M213 342l147 85 149-85" stroke="#f7a86b" stroke-width="9" opacity=".5" filter="url(#glow)"/>
+<path d="M222.0 318.0v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M369.0 389.0v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M231.7 323.6v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M378.7 383.4v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M241.4 329.2v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M388.4 377.8v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M251.1 334.8v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M398.1 372.2v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M260.8 340.4v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M407.8 366.6v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M270.5 346.0v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M417.5 361.0v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M280.2 351.6v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M427.2 355.4v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M289.9 357.2v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M436.9 349.8v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M299.6 362.8v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M446.6 344.2v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M309.3 368.4v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M456.3 338.6v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M319.0 374.0v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M466.0 333.0v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M328.7 379.6v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M475.7 327.4v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M338.4 385.2v13l-9 5v-12z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M485.4 321.8v13l9-5v-13z" fill="url(#edge)" stroke="#97979e" stroke-width=".5"/><path d="M231 274l128-74 131 76v39l-130 75-129-75z" fill="url(#edge)" stroke="#72737c"/>
+<path d="M231 274l128-74 131 76-130 75z" fill="url(#lid)" stroke="url(#bevel)" stroke-width="2"/>
+<path d="M241 274l118-68 121 70-120 69z" stroke="#c5c5ce" stroke-opacity=".22"/>
+<path d="M242 274l117-67 119 69-118 68z" fill="url(#mesh)"/>
+<path d="M231 278l129 75 130-75M360 354v31" stroke="#dddddf" stroke-opacity=".17"/>
+<g transform="translate(359 271) matrix(.866 .5 -.866 .5 0 0)">
+ <path d="M-34-35h28a35 35 0 0 1 0 70h-28z" stroke="#eeeef2" stroke-width="4"/>
+ <path d="M-54-18h20M-54 18h20" stroke="#eeeef2" stroke-width="4"/>
+ <circle cx="39" cy="0" r="6" stroke="#eeeef2" stroke-width="4"/>
+ <path d="M45 0h24" stroke="#f7a86b" stroke-width="4"/>
+</g>
+<g font-family="monospace" font-size="9" letter-spacing="2" fill="#b8b8c1">
+ <text transform="translate(273 278) rotate(30)">NAND / 050</text>
+ <text transform="translate(369 321) rotate(-30)" font-size="7" fill="#d2ae90">TAPEOUT</text>
+</g>
+<g fill="#73747e"><circle cx="358" cy="217" r="2"/><circle cx="470" cy="276" r="2"/><circle cx="251" cy="274" r="2"/><circle cx="360" cy="335" r="2"/></g>
+<g fill="#fff" opacity=".5"><circle cx="127" cy="366" r="2"/><circle cx="595" cy="367" r="2"/><circle cx="360" cy="505" r="2"/></g>
+<path d="M142 455v20l38 22M565 451v20l-38 22" stroke="#727078" stroke-opacity=".4"/>
+<text x="317" y="568" fill="#6f6b6a" font-family="monospace" font-size="9" letter-spacing="4">LOGIC IS FINAL</text>
+</svg>
