@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jobs — NANDorRefund</title>
+<meta name="description" content="Live escrow jobs on X Layer, refereed by circuit #51. Create a job, deliver, and let the circuit settle it: RELEASE, REFUND, or SPLIT 50/50.">
+<link rel="icon" href="logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#08090b">
+<script src="theme.js"></script>
+<link rel="stylesheet" href="style.css">
+<style>
+.jobs-form label{display:block;font:11px 'IBM Plex Mono',monospace;letter-spacing:.06em;color:var(--faint);margin:18px 0 8px;text-transform:uppercase}
+.jobs-form input,.jobs-form textarea{width:100%;box-sizing:border-box;background:var(--panel2);border:1px solid var(--border2);border-radius:8px;color:var(--text);padding:12px 14px;font:14px Manrope,sans-serif}
+.jobs-form textarea{min-height:74px;resize:vertical}
+.jobs-form input:focus,.jobs-form textarea:focus{outline:2px solid var(--amber);outline-offset:1px}
+.jobs-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.jobs-hash{font:11px 'IBM Plex Mono',monospace;color:var(--faint);word-break:break-all;margin-top:8px}
+.job{margin-bottom:22px}
+.job .console-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.job-rows .evidence-row{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid var(--border)}
+.job-rows .evidence-row span{color:var(--faint)}
+.job-rows .evidence-row strong{text-align:right}
+.job-act{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
+.job-act input{flex:1 1 240px;background:var(--panel2);border:1px solid var(--border2);border-radius:8px;color:var(--text);padding:11px 13px;font:14px Manrope,sans-serif}
+.walletbar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between}
+@media (max-width:640px){.jobs-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body class="inner-page">
+<a class="skip" href="#main">Skip to content</a>
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="index.html"><img src="logo.svg" alt="" width="28" height="28"><span>NAND<span class="or">or</span>Refund</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a><a href="bench.html">Live bench</a><a href="how.html">How it works</a><a href="proof.html">Proof</a>
+    </div>
+    <a class="btn sm" href="bench.html">Open live bench</a>
+    <button class="theme-toggle" type="button" aria-label="Switch color mode"><svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg><svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a8.5 8.5 0 1 0 11.5 11.5Z"/></svg><span class="theme-label">Theme</span></button>
+    <button class="burger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<main id="main">
+<header class="pagehead">
+ <div class="wrap">
+  <div class="eyebrow"><span class="signal"></span> LIVE ESCROW · REFEREE CIRCUIT #51</div>
+  <h1>Put a job in front<br>of the referee.</h1>
+  <p>This is the production escrow on X Layer mainnet, not a demo. Lock OKB against a deliverable, the freelancer delivers against its hash, and circuit #51 settles the job: RELEASE, REFUND, or SPLIT 50/50. Your wallet is only needed when money moves or a fact is signed.</p>
+  <div class="card walletbar" style="margin-top:30px">
+    <div><div class="console-top"><span>WALLET</span><span>X LAYER · CHAIN 196</span></div><strong id="wallet-state">not connected</strong></div>
+    <button class="btn" id="connect" type="button">Connect wallet</button>
+  </div>
+ </div>
+</header>
+
+<section>
+ <div class="wrap">
+  <div class="section-heading"><div><div class="eyebrow grey">NEW JOB</div><h2>Agree the terms.<br>Lock the money.</h2></div><p>The deliverable text below is hashed and written into the job terms. Delivery counts only when the same text, and so the same hash, comes back. First escrow per client is free; after that the fee is 0.8% on release or split settlements, and refunds are always fee-free.</p></div>
+  <div class="card jobs-form">
+    <label for="c-freelancer">Freelancer address</label>
+    <input id="c-freelancer" placeholder="0x… the account that will do the work">
+    <div class="jobs-grid">
+      <div><label for="c-amount">Amount (OKB)</label><input id="c-amount" placeholder="0.005" inputmode="decimal"></div>
+      <div><label for="c-delivery-hours">Delivery window (hours)</label><input id="c-delivery-hours" value="24" inputmode="decimal"></div>
+    </div>
+    <div class="jobs-grid">
+      <div><label for="c-accept-hours">Acceptance window after that (hours)</label><input id="c-accept-hours" value="24" inputmode="decimal"></div>
+      <div></div>
+    </div>
+    <label for="c-deliverable">The deliverable, in words</label>
+    <textarea id="c-deliverable" placeholder="e.g. Logo sketch v1, three concepts, delivered as PNG files"></textarea>
+    <div class="jobs-hash">Commitment hash: <span id="c-hash">hash appears as you type</span></div>
+    <div class="job-act"><button class="btn" id="create-btn" type="button">Create job and fund it</button><span class="micro" id="create-status"></span></div>
+  </div>
+ </div>
+</section>
+
+<section>
+ <div class="wrap">
+  <div class="section-heading"><div><div class="eyebrow grey">THE RECORD</div><h2>Every job the escrow holds.</h2></div><p><span id="job-count">…</span> job(s) so far, read live from the contract. Settled jobs can be re-run against the circuit by anyone, any time, with the button on their card.</p></div>
+  <div id="job-list"><p class="micro">Reading the escrow…</p></div>
+ </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>NANDorRefund · Circuit-refereed escrow on X Layer · Built with TapeOut</div>
+    <div style="display:flex;gap:20px"><a href="https://github.com/Jacksonx28/nandorrefund">GitHub</a><a href="spike.html">Spike tool</a><a href="v2.html">v2</a><a href="v1.html">v1</a></div>
+  </div>
+</footer>
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" aria-label="Menu">
+  <div class="d-head">
+    <a class="brand" href="index.html" style="font-size:16px"><img src="logo.svg" alt="" width="26" height="26"><span>NAND<span class="or">or</span>Refund</span></a>
+    <button class="d-close" id="drawerClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav>
+    <a class="d-link" href="index.html">Home<span class="mono">01</span></a>
+    <a class="d-link" href="bench.html">Live bench<span class="mono">02</span></a>
+    <a class="d-link" href="how.html">How it works<span class="mono">03</span></a>
+    <a class="d-link" href="proof.html">Proof<span class="mono">04</span></a>
+  </nav>
+  <a class="btn d-cta" href="bench.html" style="justify-content:center">Ask the referee</a>
+  <div class="d-foot">Circuit #50 · X Layer mainnet</div>
+</aside>
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
+<script src="nav.js"></script>
+<script src="jobs.js"></script>
+</body></html>
