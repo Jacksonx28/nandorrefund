@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NANDorRefund - Worked example job</title>
-<style>body{font-family:system-ui,sans-serif;max-width:640px;margin:40px auto;padding:0 16px;background:#0e0f13;color:#e8e9ec}button{background:#ff4d00;color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:16px;cursor:pointer;margin:6px 6px 6px 0}button:disabled{opacity:.4}code{background:#1c1e24;padding:2px 6px;border-radius:6px;word-break:break-all}.card{background:#17181d;border:1px solid #26272e;border-radius:14px;padding:18px;margin:14px 0}a{color:#ff7a29}#log{white-space:pre-wrap;font-size:14px;line-height:1.5}.step{opacity:.45}.step.active{opacity:1}</style>
+<style>body{font-family:system-ui,sans-serif;max-width:640px;margin:40px auto;padding:0 16px;background:#0e0f13;color:#e8e9ec}button{background:#ff4d00;color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:16px;cursor:pointer;margin:6px 6px 6px 0}button:disabled{opacity:.4}code{background:#1c1e24;padding:2px 6px;border-radius:6px;word-break:break-all}.card{background:#17181d;border:1px solid #26272e;border-radius:14px;padding:18px;margin:14px 0}a{color:#ff7a29}#log{white-space:pre-wrap;font-size:14px;line-height:1.5}input{background:#1c1e24;color:#e8e9ec;border:1px solid #333;border-radius:8px;padding:10px;width:100%;box-sizing:border-box;font-size:14px;margin:6px 0}.step{opacity:.45}.step.active{opacity:1}</style>
 </head><body>
 <h1>NANDorRefund: the worked example</h1>
-<p>One real job through the live escrow <code>0xEca9...60d5</code> on <b>X Layer</b>, refereed by circuit <b>#51</b>. You play both roles (client and freelancer, same wallet) so every step is one signature. Amount: <b>0.005 OKB</b>, which comes back to you at settlement (first job is fee-free). The deliverable for this job is the text below; its hash is committed in the job terms, and delivery presents the same hash, so the circuit sees a match.</p>
-<div class="card"><b>Deliverable:</b> <span id="deliv"></span><br><b>Its hash:</b> <code id="hash"></code></div>
+<p>One real job through the live escrow <code>0xEca9...60d5</code> on <b>X Layer</b>, refereed by circuit <b>#51</b>. The contract forbids client and freelancer being the same address, so this uses <b>two of your Rabby accounts</b>: your main account is the client, a second account is the freelancer. Before you start: send the second account <b>0.003 OKB</b> from your main account so it can pay gas for its one signature (Deliver). Amount: <b>0.005 OKB</b>, paid back out at settlement (first job is fee-free). When the page asks you to switch accounts, switch in Rabby, then click <b>Connect wallet</b> on this page again (do not refresh, your job id is kept).</p>
+<div class="card"><b>Deliverable:</b> <span id="deliv"></span><br><b>Its hash:</b> <code id="hash"></code><br><br><b>Freelancer address</b> (your second Rabby account):<input id="freelancer" placeholder="0x..."><b>Resume a job id</b> (only if you refreshed mid-flow):<input id="resume" placeholder="leave empty for a new job"></div>
 <div class="card"><button id="connect">1. Connect wallet</button> <span id="acct">not connected</span></div>
-<div class="card step" id="s2"><button id="create" disabled>2. Create job and fund 0.005 OKB</button><div id="created"></div></div>
-<div class="card step" id="s3"><button id="deliver" disabled>3. Deliver (as freelancer)</button></div>
-<div class="card step" id="s4"><button id="checklist" disabled>4. Set checklist OK (as client)</button></div>
-<div class="card step" id="s5"><button id="accept" disabled>5. Accept the work (as client)</button></div>
+<div class="card step" id="s2"><button id="create" disabled>2. Create job and fund 0.005 OKB (main account)</button><div id="created"></div></div>
+<div class="card step" id="s3"><button id="deliver" disabled>3. Deliver (switch to second account first, then Connect again)</button></div>
+<div class="card step" id="s4"><button id="checklist" disabled>4. Set checklist OK (switch back to main account, then Connect again)</button></div>
+<div class="card step" id="s5"><button id="accept" disabled>5. Accept the work (main account)</button></div>
 <div class="card step" id="s6"><button id="settle" disabled>6. Settle - the circuit decides</button><div id="result"></div></div>
 <div class="card"><div id="log">Ready.</div></div>
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.5/dist/ethers.umd.min.js"></script>
@@ -38,6 +38,8 @@ document.getElementById('connect').onclick=async()=>{
   const a=await signer.getAddress();
   document.getElementById('acct').textContent=a+' on X Layer';
   escrow=new ethers.Contract(ESCROW,ABI,signer);
+  const r=document.getElementById('resume').value.trim();
+  if(r!=='' && jobId===null){ jobId=BigInt(r); document.getElementById('created').innerHTML='Resumed job id: <b>'+jobId+'</b>'; ['deliver','checklist','accept','settle'].forEach(b=>document.getElementById(b).disabled=false); ['s3','s4','s5','s6'].forEach(activate); log('Connected as '+a+', resumed job '+jobId+'. Continue with the step you were on.'); return; }
   document.getElementById('create').disabled=false; activate('s2');
   log('Connected: '+a);
 };
@@ -47,17 +49,20 @@ async function run(label, fn, nextBtn, nextStep){
 }
 document.getElementById('create').onclick=()=>run('Creating job', async()=>{
   const me=await signer.getAddress();
+  const fr=document.getElementById('freelancer').value.trim();
+  if(!ethers.isAddress(fr)){ log('Paste your second account address in the freelancer field first.'); return; }
+  if(fr.toLowerCase()===me.toLowerCase()){ log('Freelancer cannot be the connected account. Connect your main account and paste the second account as freelancer.'); return; }
   const now=Math.floor(Date.now()/1000);
-  const tx=await escrow.createJob(me, now+86400, now+172800, HASH, {value: ethers.parseEther('0.005')});
+  const tx=await escrow.createJob(fr, now+86400, now+172800, HASH, {value: ethers.parseEther('0.005')});
   const rc=await tx.wait();
   for(const l of rc.logs){ try{ const p=escrow.interface.parseLog(l); if(p && p.name==='JobCreated'){ jobId=p.args.id; } }catch(e){} }
   document.getElementById('created').innerHTML='Job id: <b>'+jobId+'</b>, 0.005 OKB locked.'+link(tx.hash);
   document.getElementById('deliver').disabled=false; activate('s3');
-  log('Job '+jobId+' created and funded.');
+  log('Job '+jobId+' created and funded. Now switch Rabby to your second account, click Connect wallet, then Deliver.');
 });
 document.getElementById('deliver').onclick=()=>run('Delivering', async()=>{
   const tx=await escrow.deliver(jobId, HASH); await tx.wait();
-  log('Delivered with matching hash.'+link(tx.hash));
+  log('Delivered with matching hash. Switch back to your main account, click Connect wallet, then Set checklist OK.');
 }, 'checklist', 's4');
 document.getElementById('checklist').onclick=()=>run('Setting checklist', async()=>{
   const tx=await escrow.setChecklist(jobId, true); await tx.wait();
@@ -75,8 +80,8 @@ document.getElementById('settle').onclick=()=>run('Settling', async()=>{
   const replay=await escrow.replayVerdict(jobId);
   const pinName = replay===1n ? 'RELEASE' : (replay===2n ? 'REFUND' : (replay===4n ? 'SPLIT50' : 'unknown'));
   let msg='Settled.'+link(tx.hash);
-  if(s){ msg+='<br>Verdict enum: <b>'+s.verdict+'</b> · input bits fed to circuit: <b>'+s.inputBits+'</b> (binary '+Number(s.inputBits).toString(2).padStart(5,'0')+')'
-    +'<br>To freelancer: <b>'+ethers.formatEther(s.toFreelancer)+' OKB</b> · back to client: '+ethers.formatEther(s.toClient)+' OKB · fee: '+ethers.formatEther(s.fee)+' OKB'; }
+  if(s){ msg+='<br>Verdict enum: <b>'+s.verdict+'</b> - input bits fed to circuit: <b>'+s.inputBits+'</b> (binary '+Number(s.inputBits).toString(2).padStart(5,'0')+')'
+    +'<br>To freelancer: <b>'+ethers.formatEther(s.toFreelancer)+' OKB</b> - back to client: '+ethers.formatEther(s.toClient)+' OKB - fee: '+ethers.formatEther(s.fee)+' OKB'; }
   msg+='<br>Re-run the referee (replayVerdict): circuit answers pin <b>'+replay+'</b> = <b>'+pinName+'</b>, same as at settlement.';
   document.getElementById('result').innerHTML=msg;
   log('Done. The worked example is complete - send Shadow a screenshot.');
